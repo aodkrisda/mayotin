@@ -1,0 +1,107 @@
+
+<script type="text/ng-template" id="custom.form.group.html">
+    <div class="modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" ng-show="title">
+                    <button type="button" class="close" aria-label="Close" ng-click="$hide()"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title"><span ng-class="getModalIcon(editingItem.group_id)"></span> {{title}}</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" name="form" novalidate>
+                        <fieldset>
+
+
+                            <div class="form-group" ng-class="{ 'has-error' : form.fd1.$invalid && form.$dirty}">
+                                <!-- Text input-->
+                                <label class="col-md-4 control-label">ชื่อกลุ่มสาระ</label>
+                                <div class="col-md-7">
+                                    <input type="text" autofocus name="fd1" placeholder="ยังไม่มีข้อมูล" required ng-model="editingItem.name" class="form-control input-md">
+                                    <p class="help-block" ng-show="form.fd1.$invalid && form.$dirty"><span class="glyphicon glyphicon-warning-sign"></span> ต้องป้อนชื่อกลุ่มสาระก่อน</p>
+                                </div>
+                            </div
+
+                        </fieldset>
+                        <div class="row">
+                       	 <div class="col-md-offset-4 col-md-7 text-primary" data-ng-show="form.$invalid"><strong><u>หมายเหตุ</u></strong> ต้องกรอกข้อมูลให้ ถูกต้อง ครบถ้วนก่อน จึงจะสามารบันทึกข้อมูลได้</div>
+                        </div>                          
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" style="min-width:12em" class="btn btn-primary" ng-disabled="!(form.$dirty && form.$valid)" ng-click="saveForm()"><span class="glyphicon glyphicon-floppy-disk"></span> บันทึกข้อมูล</button>
+                    <button type="button" style="min-width:12em" class="btn btn-warning" ng-click="cancelForm()"><span class="glyphicon glyphicon-ban-circle"></span> ยกเลิก</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<div class="container-fluid">
+    <div ng-controller="FilterCtrl">
+        <div class="list-group" ng-controller="CustomTableCtrl" ng-init="pkField='group_id';setAPI('group','custom.form.group.html',{search:'searchText'})">
+            <div class="list-group-item" style="background-color:#efefef">
+                <div class="text-left text-info pull-left">
+                    <h2 style="padding:0px;margin:0px;"><span class="glyphicon glyphicon-th"></span> กลุ่มสาระ ({{tableParams.total()}})</h2>
+                </div>
+                <div class="text-right">
+                    <div class="btn-group">
+                        <button ng-click="newItem()" class="btn btn-info"><span class="glyphicon glyphicon-plus"></span> เพิ่มข้อมูล</button>
+                        <button ng-click="editItem()" ng-show="hasSelected()" class="btn btn-info"><span class="glyphicon glyphicon-pencil"></span> แก้เขข้อมูล</button>
+                        <button data-placement="bottom-right" data-trigger="click" bs-popover data-template="custom.confirm.popover.html"
+                                ng-click="removeItem()" ng-show="hasSelected()" class="btn btn-info" data-auto-close="true">
+                            <span class="glyphicon glyphicon-remove"></span> ลบข้อมูล
+                        </button>
+                        <button ng-click="refresh();loadLookups('admin_group')" class="btn btn-info"><span class="glyphicon glyphicon-refresh"></span> โหลดข้อมูล</button>
+                        <span ng-click="toggleFilter()" class="btn btn-success">
+                            <span ng-if="!filterIsShow()"><span class="glyphicon glyphicon-search"></span> ค้นหา</span>
+                            <span ng-if="filterIsShow()"><span class="glyphicon glyphicon-eye-close"></span> ซ่อน</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <style>
+                .adon-label {
+                    width: 150px;
+                    text-align: 'right';
+                }
+            </style>
+            <div class="list-group-item" style="padding-bottom:0px;">
+                <div loading-container="tableParams.settings().$loading">
+                    <div ng-show="filterIsShow()">
+                        <div class="input-group col-md-6 col-md-offset-3">
+                            <div class="input-group-addon adon-label">ค้นหาชื่อ</div>
+                            <input type="text" class="form-control" ng-model="searchText" ng-enter="setFilter()" placeholder="{{(lastSearchText)?lastSearchText:'ชื่อที่ต้องการค้นหา'}}" />
+                            <div ng-if="!lastSearchText" class="input-group-addon btn btn-default" ng-click="setFilter()" ng-disabled="!searchText" title="เริ่มค้นหา"><span class="glyphicon glyphicon-search"></span></div>
+                            <div ng-if="lastSearchText" class="input-group-addon btn btn-default" ng-click="clearFilter()" title="เลิกค้นหา"><span class="glyphicon glyphicon-remove"></span></div>
+
+                        </div>
+
+                        <hr />
+                    </div>
+                    <table ng-table="tableParams" show-filter="false" class="table table-hover" template-pagination="custom.pages.html">
+                        <tbody>
+
+                            <tr ng-repeat="it in $data"
+                                ng-click="selectRow(it);"
+                                ng-dblclick="editItem()"
+                                ng-class="{'active': isSelected(it)}">
+                                <td width="30" class="text-right text-muted">{{startIdx + $index + 1}}.</td>
+                                <td width="30" header="'custom.checked.html'">
+                                    <input type="checkbox" ng-model="checkboxes.items[it[pkField]]" />
+                                </td>
+                                <td data-title="'ชื่อกลุ่มสาระ'" sortable="'name'">
+                                    {{it.name}}  <span ng-if="isSelected(it)" class="pull-right glyphicon glyphicon-asterisk"></span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+

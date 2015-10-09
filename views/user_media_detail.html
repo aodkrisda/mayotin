@@ -1,0 +1,491 @@
+
+<style>
+  .add-vspace{
+  padding-top:0.5em;
+  }
+  .add-vspace-bottom{
+  padding-bottom:1em;
+  }
+  table#tb-detail th{
+  	text-align:right;
+  }
+  textarea.comment[readonly]{
+  	background-color:#fefefe;
+  }
+
+
+</style>
+
+﻿<script type="text/ng-template" id="custom.comment.menu.html">
+<ul tabindex="-1" class="dropdown-menu" role="menu">
+  <li role="presentation" >
+    <a role="menuitem" tabindex="-1" href="javascript:void(0)" ng-click="callEditComment()"><i class="fa fa-edit"></i>&nbsp;แก้ไขข้อความ</a>
+    <a role="menuitem" tabindex="-1" href="javascript:void(0)"  ng-click="callHideComment()"><i class="fa fa-adjust"></i>&nbsp;ซ่อนข้อความนี้</a>
+    <a role="menuitem" tabindex="-1" href="javascript:void(0)"  ng-click="callRemoveComment()"><i class="fa fa-remove"></i>&nbsp;ลบข้อความนี้</a>
+  </li>
+</ul>
+</script>
+<script type="text/ng-template" id="custom.form.comment.html">
+    <div class="modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" ng-show="title">
+                    <button type="button" class="close" aria-label="Close" ng-click="$hide()"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">ความคิดเห็น <i class="fa fa-comment-o fa-lg"></i></h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" name="form" novalidate>
+                        <fieldset>
+
+
+          <div class="col-md-12">
+            <form class="form">
+              <div class="form-group" ng-class="{ 'has-error' : form.fd1.$invalid && form.$dirty,'has-warning':editingItem.comment_id}">
+                <textarea  name="fd1" ng-readonly="editingItem.comment_id"  placeholder="ข้อความคิดเห็น..." autofocus required ng-model="editingItem.comment" class="form-control comment" rows="8"></textarea>
+                <p class="help-block" ng-show="form.fd1.$invalid && form.$dirty"><span class="glyphicon glyphicon-warning-sign"></span> ต้องพิมพ์ข้อความคิดเห็นก่อน</p>
+                <p class="help-block" ng-show="editingItem.comment_id"><span class="glyphicon glyphicon-warning-sign"></span> คุณไม่สามารถเปลี่ยนแปลงข้อความคิดเห็นนี้ได้</p>
+              </div>
+              <div class="form-group">
+              	<label>
+              	<div ios-toggle ng-model="editingItem.hide" ng-true-value="'1'" ng-false-value="'0'"></div> <span ng-if="editingItem.hide=='1'">ซ่อนข้อความคิดเห็นนี้</span>
+              	<span ng-if="editingItem.hide!='1'">แสดงข้อความคิดเห็นนี้</span>
+              	</label>
+              </div> 
+            </form>
+          </div>
+
+                        </fieldset>
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" style="min-width:10em" class="btn btn-primary" ng-disabled="!(form.$valid)" ng-click="saveForm()"><span class="glyphicon glyphicon-floppy-disk"></span> บันทึกข้อมูล</button>
+                    <button type="button" style="min-width:10em" class="btn btn-warning" ng-click="cancelForm()"><span class="glyphicon glyphicon-ban-circle"></span> ยกเลิก</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<br>
+
+<div clss="row" ng-controller="MediaCtrl">      
+			<div class="col-md-12">
+				<div class="list-group" >
+				<div class="list-group-item" style="background-color:#f6f6f6">
+					<a href="#/user/search" class="btn btn-success pull-right" style="min-width:12em"><span class="glyphicon glyphicon-th"></span> รายการสื่อ</a>
+		        	<h3 class="list-group-item-heading"><span class="fa fa-film"></span> รายละเอียดข้อมูลเกี่ยวกับสื่อ</h3>
+				</div>
+				<div class="list-group-item">
+					<div class="row">
+						<div class="col-md-6">
+							<div style="padding-right:3px" custom-media start="viewMedia(selectedMedia)" version="{{selectedMedia.date_modified}}" title="{{selectedMedia.topic}}" url="{{selectedMedia.url}}" author="{{selectedMedia.user_id}}" poster="{{selectedMedia.thumb}}"></div>
+						</div>
+						<div class="col-md-6">
+						   
+
+					        <table class="table" id="tb-detail" style="margin-top:2em">
+					            <tr>
+					              <th width="30%">รหัสสื่อ</th>
+					              <td>{{selectedMedia.media_id}}</td>
+					            </tr>
+					            <tr>
+					              <th>ชื่อเรื่อง</th>
+					              <td>{{selectedMedia.topic}}</td>
+					            </tr>
+					            <tr>
+					              <th>วิชาเรียน</th>
+					              <td>{{selectedMedia.subject_id | lookup_subject}}</td>
+					            </tr>
+					            <tr>
+					              <th>ระดับชั้น</th>
+					              <td>{{selectedMedia.level_id | lookup_level}}</td>
+					            </tr>
+					            <tr>
+					              <th>วันที่อัพโหลด</th>
+					              <td>{{selectedMedia.date_created | thai_date:'full'}}</td>
+					            </tr>
+					            <tr>
+					              <th>ผู้สอน</th>
+					              <td>{{selectedMedia.user_id | lookup_teacher}}</td>
+					            </tr>
+					            <tr>
+					              <th>ประเภทของสื่อ</th>
+					              <td>{{selectedMedia.type_id | lookup_type}}</td>
+					            </tr>
+					            <tr>
+					              <th>คำบรรยาย</th>
+					              <td>{{selectedMedia.description}}</td>
+					            </tr>
+					            <tr>
+					              <th>การเข้าใช้</th>
+					              <td>จำนวนคนเข้าดู  <span class="badge">{{selectedMedia.statistics.users}}</span>   จำนวนครั้งที่เข้าดู   <span class="badge">{{selectedMedia.statistics.views}}</span></td>
+					            </tr>            
+					            <tr>
+					              <th>การประเมินจากผู้ใช้ </th>
+					              <td>จำนวนผู้ประเมิน  <span class="badge">{{selectedMedia.statistics.evaluate_users||0}}</span>   คะแนนประเมินเฉลี่ย  <span class="badge">{{(selectedMedia.statistics.evaluate_users_score||0) | number:1}}</span></td>
+					            </tr>    
+					            <tr>
+					              <th>การประเมินจากกรรมการ </th>
+					              <td>จำนวนผู้ประเมิน  <span class="badge">{{selectedMedia.evaluate_count||0}}</span>   คะแนนประเมินเฉลี่ย  <span class="badge">{{(selectedMedia.evaluate_score||0) | number:1}}</span></td>
+					            </tr>                    
+					          <tr><th></th><td></td></tr>
+					   		</table>
+					       
+					       			
+
+						</div>
+						
+					</div>
+				</div>
+				<div class="list-group-item" style="background-color:#f6f6f6">
+					<div class="row">
+						<div class="col-md-6">
+					    	<h3 class="list-group-item-heading">คะแนนจากผู้ใช้  <span class="badge" ng-hide="selectedMedia.statistics.study.rating===null">{{selectedMedia.statistics.study.rating |number:1}}</span></h3>
+					    	<div class="row">
+					    	<div class="col-md-6" style="padding-bottom:0.5em">
+					    		<span star-rating data-max="4" ng-click="evaluateForm()"  data-star-size="fa-2x" ng-model="selectedMedia.statistics.study.rating" ></span>
+					    	</div>					    	
+					    	<div class="col-md-6">
+					            <button ng-if="getRoleName()=='manager'" class="btn btn-info btn-block" style="min-width:18em;" ng-click="evaluateForm2()">
+					              <span class="glyphicon glyphicon-ok"></span> ประเมินเสื่อจากกรรมการ
+					            </button>       	
+					    	</div>
+
+					    	</div>
+				    	</div>
+				    	
+				    	<div class="col-md-6">
+					        <div class="row" style="padding-top:1.7em">
+					          <div class="col-md-4 add-vspace">
+					            <button class="btn btn-block btn-success" ng-click="likeMedia(selectedMedia)">
+					              <span class="glyphicon glyphicon-thumbs-up"></span> ชอบ
+					              <span class="badge">{{selectedMedia.statistics.likes || 0}}</span>
+					            </button>
+					          </div>
+					          <div class="col-md-4 add-vspace">
+					            <button class="btn btn-block btn-warning" ng-click="unlikeMedia(selectedMedia)">
+					              <span class="glyphicon glyphicon-thumbs-down"></span> ไม่ชอบ
+					              <span class="badge">{{selectedMedia.statistics.unlikes || 0}}</span>
+					            </button>
+					          </div>
+					          <div class="col-md-4 add-vspace">
+					
+					            <button class="btn btn-block btn-primary"  ng-disabled="!isDownloadAble(selectedMedia)" ng-click="downloadMedia(selectedMedia)">
+					              <span class="fa fa-arrow-circle-down fa-lg"></span> Download
+					            </button>            
+					          </div>
+					 
+					        </div>				    	
+
+				    	</div>
+					</div>
+				</div>				
+				</div>
+
+			</div>
+
+</div>
+
+<!-- links -->
+<div ng-if="selectedMedia.links" >
+	<br>
+	<div class="panel-body">
+		<h3><span class="fa fa-wordpress"></span> แหล่งข้อมูลศึกษาเพิ่มเติม</h3>
+		<blockquote ng-bind-html="selectedMedia.links | html_link"></blockquote>
+	</div>
+</div>
+
+
+<!-- comments -->
+
+<p>&nbsp;</p>
+<div class="panel panel-default" ng-show="selectedMedia.media_id" ng-controller="CustomTableCtrl as comment_tb" ng-init="pkField='comment_id';tableParams.count(10);setAPI('user_comment','custom.form.comment.html',{media_id:'selectedMedia.media_id'})">
+
+<div class="panel-header">
+	<div class="col-md-12">
+		<div class="row">
+			<div class="col-sm-12">
+				<h3>ความคิดเห็นของผู้ใช้</h3>			
+				<button class="btn btn-info" style="min-width:18em" ng-click="newItem({media_id:selectedMedia.media_id})">
+				<span class="glyphicon glyphicon-plus-sign"></span> แสดงความคิดเห็นเพิ่มเติม <i class="fa fa-comment-o"></i>
+				</button>
+				<div class="pull-right">
+				 <span class="label label-default label-success" style="font-size:1.5em;padding:0px;padding-left:0.5em;padding-right:0.5em">{{tableParams.total()}}</span> <strong> ความคิดเห็น</strong>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+    <div class="panel-body" style="padding-bottom:0px;" ng-controller="UserCommentCtrl">
+        <div loading-container="tableParams.settings().$loading">
+
+            <table ng-table="tableParams" show-filter="false" class="table" xxtemplate-pagination="custom.pages.html">
+                <tbody>
+                    <tr ng-repeat="it in $data" >
+
+                        <!-- <td width="30" class="text-right text-muted">{{startIdx + $index + 1}}.</td> -->
+                        <td data-title="''">
+
+        <div class="media" style="padding-top:0.5em;" >
+          <a class="pull-left" href="javascript://void();">
+            <img ng-src="uploads/photos/{{it.user_id}}.jpg" onerror="this.src='images/photo.png'" class="img-circle img-responsive" width="32"/>
+          </a>
+          <div class="media-body">
+            <h4 class="media-heading">
+              <span class="text-primary comment"  ng-class="{'disabled':isVisible(it)}">{{it.title}} {{it.first_name}} {{it.last_name}}</span>
+              <i class="fa fa-comment-o"></i>
+              <i ng-if="canEditComment(it)" ng-click="selectComment(it)" class="btn fa fa-pencil pull-right" style="color:#cfcfcf" title="แก้ไข" bs-dropdown data-template="custom.comment.menu.html" data-placement="bottom" aria-haspopup="true" aria-expanded="false"></i>
+            </h4>
+            <blockquote class="comment" ng-class="{'disabled':isVisible(it)}">
+            	<p ng-bind-html="it.comment|nl2br"></p>
+            	<footer>วันที่ {{it.date_created | thai_date :'full'}}</footer>
+            </blockquote>
+          </div>
+        </div>
+
+                        </td>
+
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+<script type="text/ng-template" id="custom.user.evaluate.html">
+<div class="modal" tabindex="-1" role="dialog" aria-hidden="true">
+<style>
+table.evaluate td {min-width:3em}
+</style>
+        <div class="modal-dialog" ng-controller="UserEvalCtrl" style="min-width:80%">
+            <div class="modal-content">
+                <div class="modal-body">
+                	<div class="text-center center-block">
+                	<h3>แบบประเมินผู้ใช้สื่อ</h3>
+                	</div>
+            		<p class="text-right" style="padding-left:2em;padding-right:2em">
+                		<span><em>ผู้ประเมิน: {{$root.getUserName()}}</em></span>
+                	</p>                	
+                	 <hr/>
+                	 <div style="padding-left:2em;padding-right:2em">
+                	 <p><strong>ชื่อครู:</strong> {{selectedMedia.user_id|lookup_teacher}} <span class="pull-right"><strong>สังกัดระดับการศึกษา:</strong> {{$root.getUser().level_id | lookup_level}}<span></p>
+                	 <p><strong>ชื่อผลงาน:</strong> {{selectedMedia.topic}} <span class="pull-right"><strong>ประเภทเสื่อ:</strong> {{selectedMedia.type_id | lookup_type}}<span></p>
+                	 </div>
+                	<p class="text-primary" style="padding-left:2em;padding-right:2em">
+                		<br><strong><u>คำชี้แจง</u></strong>
+                		<span ng-if="!editMode">คุณจะต้องทำการเชคช่องตารางคะแนน จนครบก่อนจึงจะสามารถบันทึกผลการประเมินได้</span>
+                		<span ng-if="editMode">คุณจะต้องกดปุ่ม แก้ไขคะแนนประเมินก่อน จึงจะสามารถแก้ไขคะแนนได้</span>
+                		
+                	</p>                	 
+                    <table class="table table-bordered evaluate">
+                    	<tr>
+                    		<th valign="middle" class="text-center" rowspan="2"><br>รายการประเมิน</th>
+                    		<th class="text-center" colspan="5" >คะแนน</th> 
+                    	</tr>
+                    	<tr>
+                    		<th class="text-center">0</th>
+                    		<th class="text-center">1</th>
+                    		<th class="text-center">2</th>
+                    		<th class="text-center">3</th>
+                    		<th class="text-center">4</th>
+                    	</tr>
+                    	<tr class="text-center" ng-repeat="it in items">
+                    		<td class="text-left">{{it.id}}. {{it.name}}</td>
+                    		<td  ng-click="setScore(it,0)"><span ng-if="it.score===0" class="fa fa-check fa-lg"></span></td>
+                    		<td  ng-click="setScore(it,1)"><span ng-if="it.score===1" class="fa fa-check fa-lg"></span></td>
+                    		<td  ng-click="setScore(it,2)"><span ng-if="it.score===2" class="fa fa-check fa-lg"></span></td>
+                    		<td  ng-click="setScore(it,3)"><span ng-if="it.score===3" class="fa fa-check fa-lg"></span></td>
+                    		<td  ng-click="setScore(it,4)"><span ng-if="it.score===4" class="fa fa-check fa-lg"></span></td>
+                    	</tr>
+                    	<tr class="text-center">
+                    		<th class="text-right">สรุปคะแนน</th>
+                    		<th class="text-center">0</th>
+                    		<th class="text-center">{{score_group['1']}}</th>
+                    		<th class="text-center">{{score_group['2'] * 2}}</th>
+                    		<th class="text-center">{{score_group['3'] * 3}}</th>
+                    		<th class="text-center">{{score_group['4'] * 4}}</th>
+                    	</tr>   
+                    	<tr class="text-center">
+                    		<th class="text-right">รวมคะแนน </th>
+                    		<th class="text-center" colspan="5">{{(check_count>0)?score_total:'-'}}</th>
+                    	</tr>                      	
+                    	<tr class="text-center text-primary">
+                    		<th class="text-right">สรุปผลการประเมิน</th>
+                    		<th ng-if="check_count" colspan="5" class="text-center">{{(score_result)|number:1}}<br>{{score_result_text}}</th>
+                    		<th ng-if="check_count<1" colspan="5" class="text-center">-</th>
+                    	</tr>  
+                    </table>
+                      
+                    <hr/>
+					<div class="row" style="padding-left:2em">
+						
+						<div class="col-md-6">
+						<strong>เกณฑ์การให้คะแนน</strong><br>
+						<ul class="list-unstyled" style="padding-left:1em">
+							<li>0 = ไม่ปรากฏ</li>
+							<li>1 = มีความเหมาะสมน้อย</li>
+							<li>2 = มีความเหมาะสมปานกลาง</li>
+							<li>3 = มีความเหมาะสมมาก</li>
+							<li>4 = ดีมาก</li>
+						</ul>
+						</div>
+						<div class="col-md-6">
+						<strong>เกณฑ์การแปลผลจากคะแนนรวม</strong><br>
+						<ul class="list-unstyled" style="padding-left:1em">
+							<li>0 - <1 = ต้องปรับปรุง</li>
+							<li>1 - <2 = ควรปรับปรุง</li>
+							<li>2 - <3 = พอใช้</li>
+							<li>3 - <4 = ดี</li>
+							<li>4 = ดีมาก</li>
+						</ul>	
+						</div>					
+						
+					</div>
+			
+
+                </div>
+                <div class="modal-footer" id="_btn-save-eval">
+                	<button ng-if="editMode" type="button" style="min-width:16em" class="btn btn-primary"  ng-click="setEdit()"><span class="glyphicon glyphicon-pencil"></span> แก้ไขคะแนนประเมิน</button>
+                    <button ng-if="!editMode" type="button" style="min-width:16em" class="btn btn-success" ng-disabled="!(ready)"  ng-click="confirmSave('#_btn-save-eval',$hide)"><span class="glyphicon glyphicon-floppy-disk"></span> บันทึกผลการประเมิน</button>
+                    <button type="button" style="min-width:16em" class="btn btn-warning" ng-click="$hide()"><span class="glyphicon glyphicon-ban-circle"></span> ยกเลิก</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>  
+
+<script type="text/ng-template" id="custom.user.evaluate2.html">
+<div class="modal" tabindex="-1" role="dialog" aria-hidden="true">
+<style>
+table.evaluate td {min-width:3em}
+table.evaluate td.ngroup {padding-left:2em}
+table.evaluate td.group {font-weight:bold}
+</style>
+        <div class="modal-dialog" ng-controller="UserEval2Ctrl" style="min-width:80%">
+            <div class="modal-content">
+                <div class="modal-body">
+                	<div class="text-center center-block">
+                	<h3>แบบประเมินคณะกรรมการ</h3>
+                	</div>
+            		<p class="text-right" style="padding-left:2em;padding-right:2em">
+                		<span><em>ผู้ประเมิน: {{$root.getUserName()}}</em></span>
+                	</p>                	
+                	 <hr/>
+                	 <div style="padding-left:2em;padding-right:2em">
+                	 <p><strong>ชื่อครู:</strong> {{selectedMedia.user_id|lookup_teacher}} <span class="pull-right"><strong>สังกัดระดับการศึกษา:</strong> {{$root.getUser().level_id | lookup_level}}<span></p>
+                	 <p><strong>ชื่อผลงาน:</strong> {{selectedMedia.topic}} <span class="pull-right"><strong>ประเภทเสื่อ:</strong> {{selectedMedia.type_id | lookup_type}}<span></p>
+                	 </div>
+                	<p class="text-primary" style="padding-left:2em;padding-right:2em">
+                		<br><strong><u>คำชี้แจง</u></strong>
+                		<span ng-if="!editMode">คุณจะต้องทำการเชคช่องตารางคะแนน จนครบก่อนจึงจะสามารถบันทึกผลการประเมินได้</span>
+                		<span ng-if="editMode">คุณจะต้องกดปุ่ม แก้ไขคะแนนประเมินก่อน จึงจะสามารถแก้ไขคะแนนได้</span>
+                		
+                	</p>                	 
+                    <table class="table table-bordered evaluate">
+                    	<tr>
+                    		<th valign="middle" class="text-center" rowspan="2"><br> <i ng-if="items.length<1" class="fa fa-refresh fa-spin"></i> รายการประเมิน</th>
+                    		<th class="text-center" colspan="5" >คะแนน</th> 
+                    	</tr>
+                    	<tr>
+                    		<th class="text-center">0</th>
+                    		<th class="text-center">1</th>
+                    		<th class="text-center">2</th>
+                    		<th class="text-center">3</th>
+                    		<th class="text-center">4</th>
+                    	</tr>
+                    	<tr class="text-center" ng-repeat="it in items">
+                    		<td ng-if="it.group===true" class="text-left group">{{it.name}}</td>
+                    		<td ng-if="it.group!==true" class="text-left ngroup">{{it.name}}</td>
+                    		<td ng-class="tdClass(it)" ng-click="setScore(it,0)"><span ng-if="it.score===0" class="fa fa-check fa-lg"></span></td>
+                    		<td ng-class="tdClass(it)" ng-click="setScore(it,1)"><span ng-if="it.score===1" class="fa fa-check fa-lg"></span></td>
+                    		<td ng-class="tdClass(it)" ng-click="setScore(it,2)"><span ng-if="it.score===2" class="fa fa-check fa-lg"></span></td>
+                    		<td ng-class="tdClass(it)" ng-click="setScore(it,3)"><span ng-if="it.score===3" class="fa fa-check fa-lg"></span></td>
+                    		<td ng-class="tdClass(it)" ng-click="setScore(it,4)"><span ng-if="it.score===4" class="fa fa-check fa-lg"></span></td>
+                    	</tr>
+                    	<tr class="text-center">
+                    		<th class="text-right">สรุปคะแนน</th>
+                    		<th class="text-center">0</th>
+                    		<th class="text-center">{{score_group['1']}}</th>
+                    		<th class="text-center">{{score_group['2'] * 2}}</th>
+                    		<th class="text-center">{{score_group['3'] * 3}}</th>
+                    		<th class="text-center">{{score_group['4'] * 4}}</th>
+                    	</tr>   
+                    	<tr class="text-center">
+                    		<th class="text-right">รวมคะแนน </th>
+                    		<th class="text-center" colspan="5">{{(check_count>0)?score_total:'-'}}</th>
+                    	</tr>                      	
+                    	<tr class="text-center text-primary">
+                    		<th class="text-right">สรุปผลการประเมิน</th>
+                    		<th ng-if="check_count" colspan="5" class="text-center">{{(score_result)|number:1}}<br>{{score_result_text}}</th>
+                    		<th ng-if="check_count<1" colspan="5" class="text-center">-</th>
+                    	</tr>  
+                     	
+                    </table>
+                   
+					<div ng-form>
+            		<div class="from-group">
+            			<label class="text-primary"><i class="fa fa-comment-o fa-lg"></i> ข้อเสนอแนะในการปรับปรุง</label>
+            			<div  ng-show="editMode"class="form-control-static"><blockquote style="font-size:1em;margin-left:2em" ng-bind-html="my_comment|nl2br"></blockquote></div>
+            			<textarea ng-show="!editMode"  class="form-control comment" placeholder="ข้อเสนอแนะในการปรับปรุงของคุณ" ng-model="my_comment" rows="4"></textarea>
+            		</div> 
+            		</div> 
+	         
+                    <hr/>
+                    
+					<div class="row" style="padding-left:2em">
+						
+						<div class="col-md-6">
+						<strong>เกณฑ์การให้คะแนน</strong><br>
+						<ul class="list-unstyled" style="padding-left:1em">
+							<li>0 = ไม่ปรากฏ</li>
+							<li>1 = มีความเหมาะสมน้อย</li>
+							<li>2 = มีความเหมาะสมปานกลาง</li>
+							<li>3 = มีความเหมาะสมมาก</li>
+							<li>4 = ดีมาก</li>
+						</ul>
+						</div>
+						<div class="col-md-6">
+						<strong>เกณฑ์การแปลผลจากคะแนนรวม</strong><br>
+						<ul class="list-unstyled" style="padding-left:1em">
+							<li>0 - <1 = ต้องปรับปรุง</li>
+							<li>1 - <2 = ควรปรับปรุง</li>
+							<li>2 - <3 = พอใช้</li>
+							<li>3 - <4 = ดี</li>
+							<li>4 = ดีมาก</li>
+						</ul>	
+						</div>					
+						
+					</div>
+			
+
+                </div>
+                <div class="modal-footer" id="_btn-save-eval2">
+               
+                	<button ng-if="editMode" type="button" style="min-width:16em" class="btn btn-primary"  ng-click="setEdit()"><span class="glyphicon glyphicon-pencil"></span> แก้ไขคะแนนประเมิน</button>
+                    <button ng-if="!editMode" type="button" style="min-width:16em" class="btn btn-success" ng-disabled="!(ready)" ng-click="confirmSave('#_btn-save-eval2',$hide)"><span class="glyphicon glyphicon-floppy-disk"></span> บันทึกผลการประเมิน</button>
+                    <button type="button" style="min-width:16em" class="btn btn-warning" ng-click="$hide()"><span class="glyphicon glyphicon-ban-circle"></span> ยกเลิก</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>    
+
+
+<script type="text/ng-template" id="custom.confirm.eval.html">
+	<div class="popover" style="min-width:480px;max-width:100%;">
+		<div class="arrow"></div>
+		<h2 class="popover-title"><big>บันทึกผลการประเมินสื่อ</big></h2>
+		<div class="popover-content" style="min-width:480px;max-width:100%">
+				<p class="text-center text-primary"><strong>คุณต้องบันทึก การเปลี่ยนแปลงคะแนนประเมินนี้ใช่หรือไม่</strong></p>
+
+                <div class="modal-footer">
+                	<center>
+                    <button style="min-width:10em" type="button" class="btn btn-primary" ng-click="$hide();accept_save();"><span class="glyphicon glyphicon-floppy-disk"></span> บันทึก</button>
+                    <button style="min-width:10em" type="button" class="btn btn-warning" ng-click="$hide()"><span class="glyphicon glyphicon-ban-circle"></span> ไม่บันทึก</button>
+                    </center>
+                </div>
+		</div>
+	</div>
+</script>

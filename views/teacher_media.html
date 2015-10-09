@@ -1,0 +1,324 @@
+<script type="text/ng-template" id="custom.confirm.upload.html">
+	<div class="popover" style="min-width:480px;max-width:100%;">
+		<div class="arrow"></div>
+		<h2 class="popover-title"><big>ข้อตกลงและเงือนไข ในการอัพโหลดไฟล์</big></h2>
+		<div class="popover-content" style="min-width:480px;max-width:100%">
+<p class="text-primary"><strong>ห้าม Upload File, Media หรือข้อมูลต่าง ๆ ที่</strong>
+<ol style="color:orange">
+<li>พาดพิงถึงสถาบันพระมหากษัตริย์และราชวงศ์ ไปในทางเสื่อมเสียเป็นอันขาด</li>
+<li>ส่อไปในทางลามก อนาจาร</li>
+<li>อาจจะก่อให้เกิดความเสียหายหรือเป็นความผิดต่อความมั่นคงของประเทศ</li>
+<li>อาจจะก่อให้เกิดความตื่นตระหนกของประชาชน</li>
+<li>เป็นความผิดเกี่ยวกับการก่อการร้ายตามประมวลกฎหมายอาญา</li>
+<li>เป็นการตัดต่อภาพบุคคล ที่อาจทำให้เกิดความเสื่อมเสียแก่บุคคลนั้น</li>
+<li>ผิดกฎหมายทุกบทบัญญัติ รวมทั้ง พระราชบัญญัติว่าด้วยการกระทำผิดเกี่ยวกับคอมพิวเตอร์ พ.ศ. ๒๕๕๐</li>
+<li>ละเมิดลิขสิทธิ์ รวมถึง เครื่องหมายการค้า ทุกชนิด</li>
+<li>ไม่สนับสนุน หรือส่งเสริม หรือยินยอมให้นำบริการ มาใช้ในการฝากข้อมูลตามข้อกำหนดข้างต้น</li>
+<li>ขอสงวนสิทธิ์ในการลบไฟล์ที่ผู้ใช้บริการ อัพโหลดขึ้นมา แต่ผิดเงื่อนไขดังกล่าวข้างต้นทุกกรณี</li>
+
+<li>ไม่รับรองความสมบูรณ์ของไฟล์และข้อมูลอื่นๆ ในเว็บไซต์ และไม่รับผิดชอบในความผิดพลาดที่อาจเกิดขึ้น จากการนําข้อมูลดังกล่าวไปใช้ในทุกกรณี โดยไม่มีข้อยกเว้น</li>
+<li>หากไฟล์ที่ผู้ใช้อัพโหลดขึ้นมาในเซิฟเวอร์เป็นไฟล์ที่มีลิขสิทธิ์ ทางผู้ใช้ต้องรับผิดชอบและสามารถยืนยันได้ว่าไฟล์ที่ท่านอัพโหลดขึ้นมานั้นท่านมีสิทธิใช้งานอย่างถูกต้อง และไม่นำลิงค์ไปเผยแพร่ต่อในสถานที่สาธาณะ แต่ผู้ใช้สามารถนำไปใช้เพื่อตนเองและผู้อื่นในครอบครัวหรือญาติสนิทได้ หากเราได้รับแจ้งว่ามีการเผยแพร่ไฟล์ในสถานที่สาธาณะ ทางเราขอสงวนสิทธิ์ในการลบไฟล์ดังกล่าวบนเซิฟเวอร์ ซึ่งอาจเป็นผลทำให้ท่านไม่สามารถใช้งานผลิตภัณฑ์ได้</li>
+</ol>
+</p>
+							<form ng-init="$root.agreement_ok=false" style="padding-left:3em">
+  
+				              <div class="form-group">
+				              	<label>
+				              	<div ios-toggle ng-model="$root.agreement_ok" ng-true-value="true" ng-false-value="false"></div> 
+				              	<span ng-if="$root.agreement_ok" class="text-info">ข้าพเจ้ายอมรับเงือนไขการอัพโหลด</span>
+				              	<span ng-if="!$root.agreement_ok" class="text-warning">ข้าพเจ้าไม่ยอมรับเงือนไขการอัพโหลด</span>
+				              	</label>
+				              </div>                             
+                            </form>
+             
+                </div>
+                <div class="modal-footer">
+                    <button type="button" style="min-width:12em" class="btn btn-primary" ng-disabled="!$root.agreement_ok" ng-click="$hide();accept_upload();"><span class="glyphicon glyphicon-ok"></span> เริ่มอัพโหลด</button>
+                    <button type="button" style="min-width:12em" class="btn btn-warning" ng-click="$hide()"><span class="glyphicon glyphicon-ban-circle"></span> ไม่ยอมรับ</button>
+                </div>
+		</div>
+	</div>
+</script>
+﻿
+<script type="text/ng-template" id="custom.form.media.html">
+    <div class="modal" tabindex="-1" role="dialog" aria-hidden="true" >
+        <div class="modal-dialog" style="min-width:80%">
+            <div class="modal-content" ng-controller="FlowUploadCtrl as upflow" ng-init="upflow.linkScope(currentScope())">
+                <div class="modal-header" ng-show="title">
+                    <button type="button" class="close" aria-label="Close" ng-click="$hide()"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title"><span ng-class="getModalIcon(editingItem.media_id)"></span> {{title}}</h4>
+                </div>
+                <div class="modal-body">
+
+                    <form class="form-horizontal" name="form" novalidate>
+                        <fieldset ng-disabled="upflow.getFlowState()==2"  ng-controller="GroupCtrl as sgroup" >
+                            <div class="form-group" ng-if="editingItem.media_id">
+                                <!-- Text input-->
+                                <label class="col-md-3 control-label">เลขรหัสสื่อ</label>
+                                <div class="col-md-7">
+                                	<p class="form-control-static text-success"><strong>{{editingItem.media_id}}</strong></p>
+                                    
+                                </div>
+                            </div>
+                            <div class="form-group" ng-class="{ 'has-error' : form.fd1.$invalid && form.$dirty}">
+                                <!-- Text input-->
+                                <label class="col-md-3 control-label">ชื่อเรื่อง</label>
+                                <div class="col-md-7">
+                                    <input type="text" autofocus 	name="fd1" placeholder="ยังไม่มีข้อมูล" required ng-model="editingItem.topic" class="form-control input-md">
+                                    <p class="help-block" ng-show="form.fd1.$invalid && form.$dirty"><span class="glyphicon glyphicon-warning-sign"></span> ต้องป้อนชื่อเรื่องก่อน</p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <!-- Text input-->
+                                <label class="col-md-3 control-label">คำบรรยาย</label>
+                                <div class="col-md-7">
+                                    <textarea placeholder="ยังไม่มีข้อมูล" rows="4"  ng-model="editingItem.description" class="form-control input-md"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-class="{ 'has-error' : form.fd2.$invalid && form.$dirty}">
+                                <!-- Text input-->
+                                <label class=" col-md-3 control-label">ประเภทของสื่อ</label>
+                                <div class="col-md-7">
+                                    <select name="fd2" class="form-control input-md" validate-not-empty validate-not-empty ng-model="editingItem.type_id" select-value-type="string" ng-options="it.type_id as it.name for it in Lookups.getType()">
+                                        <option value=""></option>
+                                    </select>
+                                    <p class="help-block" ng-show="form.fd2.$invalid && form.$dirty"><span class="glyphicon glyphicon-warning-sign"></span> ต้องเลือกประเภทของสื่อก่อน</p>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-class="{ 'has-error' : form.fd3.$invalid && form.$dirty}">
+                                <!-- Text input-->
+                                <label class="col-md-3 control-label">กลุ่มสาระ</label>
+                                <div class="col-md-7">
+                                    <select name="fd3" class="form-control  input-md" validate-not-empty ng-model="editingItem.group_id" select-value-type="string" ng-options="it.group_id as it.name for it in Lookups.getGroup()" ng-change="sgroup.changeGroup(editingItem.group_id)">
+                                        <option value=""></option>
+                                    </select>
+									<p class="help-block" ng-show="form.fd3.$invalid && form.$dirty"><span class="glyphicon glyphicon-warning-sign"></span> ต้องเลือกกลุ่มสาระก่อน</p>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-class="{ 'has-error' : form.fd4.$invalid && form.$dirty}"> 
+                                <!-- Text input-->
+                                <label class="col-md-3 control-label">วิชาเรียน</label>
+                                <div class="col-md-7">
+                                    <select name="fd4" class="form-control input-md" validate-not-empty validate-not-empty ng-model="editingItem.subject_id" select-value-type="string" ng-options="it.subject_id as it.name for it in sgroup.getSubject()">
+                                        <option value=""></option>
+                                    </select>
+                                    <p class="help-block" ng-show="form.fd4.$invalid && form.$dirty"><span class="glyphicon glyphicon-warning-sign"></span> ต้องเลือกวิชาเรียนก่อน</p>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-class="{ 'has-error' : form.fd5.$invalid && form.$dirty}">
+                                <!-- Text input-->
+                                <label class=" col-md-3 control-label">ระดับชั้น</label>
+                                <div class="col-md-7">
+                                    <select name="fd5" class="form-control input-md" validate-not-empty ng-model="editingItem.level_id" select-value-type="string" ng-options="it.level_id as it.name for it in Lookups.getLevel()">
+                                        <option value=""></option>
+                                    </select>
+                                    <p class="help-block" ng-show="form.fd5.$invalid && form.$dirty"><span class="glyphicon glyphicon-warning-sign"></span> ต้องเลือกก่อนระดับชั้นก่อน</p>
+                                </div>
+                            </div>
+                          
+                            <div class="form-group">
+                                <!-- Text input-->
+                                <label class="col-md-3 control-label">แหล่งข้อมูลเพิ่มเติม</label>
+                                <div class="col-md-7">
+                                    <textarea placeholder="ยังไม่มีข้อมูล" rows="6"  ng-model="editingItem.links" class="form-control input-md"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="form-group" ng-if="editingItem.media_id && editingItem.uploadable!='1'" ng-class="{ 'has-error' : form.fd6.$invalid && form.$dirty}">
+                                <!-- Text input-->
+                                <label class="col-md-3 control-label">URL ที่อยู่ของสื่อ</label>
+                                <div class="col-md-7">
+                                    <input name="fd6" type="text" placeholder="ยังไม่มีข้อมูล" required ng-model="editingItem.url" class="form-control input-md">
+                                    <p class="help-block" ng-show="form.fd6.$invalid && form.$dirty"><span class="glyphicon glyphicon-warning-sign"></span> ต้องป้อน URL ที่อยู่ของสื่อก่อน จึงจะสามารถอัพโหลดภาพได้</p>
+                                </div>
+                            </div>   
+                            <div class="form-group" ng-if="editingItem.media_id">
+                                <label class="col-md-3 control-label"></label>
+                                <div class="col-md-7">
+                                    <label><div ios-toggle ng-model="editingItem.uploadable" ng-true-value="'1'" ng-false-value="'0'"></div> อัพโหลดไฟล์สื่อเอง </label>
+                                </div>
+                            </div>      
+                            
+                        <div class="row" ng-if="!editingItem.media_id">
+                        <div class="col-md-offset-3 col-md-7 text-primary"><strong><u>หมายเหตุ</u></strong> ต้องกรอกข้อมูลให้ ถูกต้อง ครบถ้วน และบันทึกข้อมูลก่อน จึงจะสามารถอัพโหลดไฟล์ได้</div>
+                        </div>                                                                           
+                        </fieldset>
+                    </form>
+
+
+<div class="row" ng-if="editingItem.media_id && form.$valid">
+<div class="col-md-12 col-md-offset-3"  >
+
+<div flow-init="{target: API_URL + 'upload/' + editingItem.media_id + '/thumb'}"  flow-complete="upflow.updateThumb($flow)" flow-files-submitted="$flow.upload()" flow-file-success="$file.response=$message;" >
+	<div>
+		
+		<div flow-btn btn btn-info flow-single-file="true" flow-attrs="{accept:'image/*'}" >
+		    <img class="img img-thumbnail" width="128"  align="middle"  ng-src="uploads/{{editingItem.user_id}}/{{editingItem.thumb}}?v{{editingItem.date_modified | date_version}}{{thumb_ver}}" onerror="this.src='images/thumb.png'"/>
+			<small><br><br></small><button class="btn btn-info" style="min-width:20em"><span class="glyphicon glyphicon-picture"></span> อัพโหลดไฟล์ภาพตัวอย่าง</button>
+		</div>
+	</div>
+</div>
+</div>
+<div class="col-md-6 col-md-offset-3" ng-if="editingItem.uploadable=='1'">
+<h5><span class="badge bage-info" ng-show="editingItem.url">{{editingItem.url}}</span>&nbsp;</h5>
+<!-- start upload box -->
+
+<div   flow-init="{target: API_URL + 'upload/' + editingItem.media_id}" flow-file-added="upflow.setFlow($flow); upflow.setFlowState(1)"  flow-files-added="upflow.setFlow($flow); upflow.setFlowState(1)"  flow-upload-started="upflow.setFlowState(2)"  flow-complete="upflow.checkFlow()" flow-file-success="$file.response = $message" flow-file-added="$file.size < 204800">
+
+	<div ng-hide="upflow.getFlowState()==2"  style="padding-bottom:1em">
+		<span class="btn btn-info" flow-btn flow-single-file="true" flow-attrs="{accept:'audio/*,video/*,application/x-shockwave-flash,application/pdf,application/mspowerpoint,application/powerpoint,application/x-mspowerpoint'}" style="min-width:20em"><span class="glyphicon glyphicon-film"></span> เลือกไฟล์ที่ต้องการอัพโหลด</span>
+		
+	</div>
+	<h4 ng-show="upflow.getFlowState()==2">กำลังอัพโหลดไฟล์<br><small>กรุณารอจนกว่าจะอัพโหลดเสร็จ...<small></small></h4>
+	<div class="well" ng-if="upflow.getFlowState()" >
+		<div ng-repeat="file in $flow.files" class="transfer-box">
+	  		<div>
+				{{file.name}} ({{file.size}}bytes)
+      			<div class="progress progress-striped" ng-class="{active: file.isUploading()}">
+       	 			<div class="progress-bar" role="progressbar" ng-class="{'progress-bar-success':file.isComplete(),'progress-bar-danger':file.error}"              aria-valuenow="{{file.progress() * 100}}"              aria-valuemin="0"              aria-valuemax="100"              ng-style="{width: (file.progress() * 100) + '%'}">
+         	 			<span class="sr-only">{{file.progress()}}% Complete</span>
+        			</div>
+     		 	</div>
+	<div style="padding-bottom:1em;" >
+		<a ng-show="upflow.getFlowState()==1"   class="btn btn-mini btn-success" ng-click="confirmUpload('#_btn_upload_', $flow)" style="min-width:12em"><span class="glyphicon glyphicon-ok"></span> เริ่มอัพโหลด</a>
+		<a ng-show="upflow.getFlowState()==-1 || (upflow.getFlowState()==2 && !$flow.isUploading())" class="btn btn-mini btn-success" ng-click="upflow.retry()" style="min-width:12em"><span class="glyphicon glyphicon-repeat"></span> อัพโหลดใหม่</a>
+		<a  ng-show="$flow.isUploading()"  class="btn btn-small btn-warning" ng-click="$flow.pause()">หยุดอัพโหลดไฟล์</a>
+		<a ng-show="$flow.files.length && upflow.getFlowState()"  class="btn btn-small btn-danger" ng-click="$flow.cancel();upflow.checkFlow()" style="min-width:12em"><span class="glyphicon glyphicon-remove"></span> ยกเลิกคิวอัพโหลดไฟล์</a>
+	</div>
+	<p class="text-center" style="height:0px"><span id="_btn_upload_">&nbsp;</span></p>
+			</div>
+    	</div>
+	</div>
+
+</div>
+
+<!--
+$scope.$on('flow::fileAdded', function (event, $flow, flowFile) {
+  event.preventDefault();//prevent file from uploading
+});
+-->
+
+<!-- end upload box -->
+
+</div>
+</div>
+
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" style="min-width:12em" class="btn btn-primary" ng-disabled="!(form.$dirty && form.$valid)" ng-click="saveForm(!!editingItem.media_id)"><span class="glyphicon glyphicon-floppy-disk"></span> บันทึกข้อมูล</button>
+                    <button type="button" style="min-width:12em" class="btn btn-warning" ng-click="cancelForm()"><span class="glyphicon glyphicon-ban-circle"></span> ยกเลิก</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<div ng-controller="FilterCtrl">
+    <div class="container-fluid" ng-controller="TeacherMediaEvalCtrl">
+        <div ui-view></div>
+        <div ng-show="urlEq('/teacher/media')" class="list-group" ng-controller="CustomTableCtrl" ng-init="pkField='media_id';searchLevel='';searchGroup='';searchSubject='';setAPI('media','custom.form.media.html',{search:'searchText',group_id:'searchGroup', level_id:'searchLevel',subject_id:'searchSubject'})">
+            <div class="list-group-item" style="background-color:#efefef">
+                <div class="text-left text-info pull-left">
+                    <h2 style="padding:0px;margin:0px;"><span class="glyphicon glyphicon-th"></span> ข้อมูลสื่อ ({{tableParams.total()}})</h2>
+                </div>
+                <div class="text-right">
+                    <div class="btn-group">
+                        <button ng-click="newItem()" class="btn btn-info"><span class="glyphicon glyphicon-plus"></span> เพิ่มข้อมูล</button>
+                        <button ng-click="editItem()" ng-show="hasSelected()" class="btn btn-info"><span class="glyphicon glyphicon-pencil"></span> แก้เขข้อมูล</button>
+                        <button data-placement="bottom-right" data-trigger="click" bs-popover data-template="custom.confirm.popover.html"
+                                ng-click="removeItem()" ng-show="hasSelected()" class="btn btn-info" data-auto-close="true">
+                            <span class="glyphicon glyphicon-remove"></span> ลบข้อมูล
+                        </button>
+                        <button ng-click="refresh()" class="btn btn-info"><span class="glyphicon glyphicon-refresh"></span> โหลดข้อมูล</button>
+                        <span ng-click="toggleFilter()" class="btn btn-success">
+                            <span ng-if="!filterIsShow()"><span class="glyphicon glyphicon-search"></span> ค้นหา</span>
+                            <span ng-if="filterIsShow()"><span class="glyphicon glyphicon-eye-close"></span> ซ่อน</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <style>
+                .adon-label {
+                    width: 150px;
+                    text-align: 'right';
+                }
+
+                tr.disabled td {
+                    color: #aaaaaa;
+                }
+            </style>
+
+            <div class="list-group-item" style="padding-bottom:0px;" >
+                <div loading-container="tableParams.settings().$loading">
+                    <div ng-show="filterIsShow()">
+                        <div class="input-group col-md-6 col-md-offset-3">
+                            <div class="input-group-addon  adon-label">กลุ่มสาระ</div>
+                            <select class="form-control" ng-model="searchGroup" ng-change="changeGroup(searchGroup);setFilter()" select-value-type="string" ng-options="it.group_id as it.name for it in Lookups.getGroup()"><option value="">ทั้งหมด</option></select>
+                            <div class="input-group-addon btn btn-default" ng-click="setFilter()"><span class="glyphicon glyphicon-filter"></span></div>
+                        </div>
+                        <div class="input-group col-md-6 col-md-offset-3">
+                            <div class="input-group-addon adon-label">วิชาเรียน</div>
+
+                            <select class="form-control" ng-model="searchSubject" ng-change="setFilter()" select-value-type="string" ng-options="it.subject_id as it.name for it in _subject"><option value="">ทั้งหมด</option></select>
+                            <div class="input-group-addon btn btn-default" ng-click="setFilter()" title="เริ่มค้นหา"><span class="glyphicon glyphicon-filter"></span></div>
+                        </div>
+                        <!--
+                        <div class="input-group col-md-6 col-md-offset-3">
+                            <div class="input-group-addon  adon-label">ระดับชั้น</div>
+                            <select class="form-control" ng-model="searchLevel" ng-change="setFilter()" select-value-type="string" ng-options="it.level_id as it.name for it in _level"><option value="">ทั้งหมด</option></select>
+                            <div class="input-group-addon btn btn-default" ng-click="setFilter()"><span class="glyphicon glyphicon-filter"></span></div>
+                        </div>
+                        -->
+
+                        <div class="input-group col-md-6 col-md-offset-3">
+                            <div class="input-group-addon adon-label">ค้นหาชื่อ</div>
+                            <input type="text" class="form-control" ng-model="searchText" ng-enter="setFilter()" placeholder="{{(lastSearchText)?lastSearchText:'ชื่อที่ต้องการค้นหา'}}" />
+                            <div ng-if="!lastSearchText" class="input-group-addon btn btn-default" ng-click="setFilter()" ng-disabled="!searchText" title="เริ่มค้นหา"><span class="glyphicon glyphicon-search"></span></div>
+                            <div ng-if="lastSearchText" class="input-group-addon btn btn-default" ng-click="clearFilter()" title="เลิกค้นหา"><span class="glyphicon glyphicon-remove"></span></div>
+
+                        </div>
+
+                        <hr />
+                    </div>
+                    <table ng-table="tableParams" show-filter="false" class="table table-hover" template-pagination="custom.pages.html">
+                        <tbody>
+
+                            <tr ng-repeat="it in $data"
+                                ng-click="selectRow(it);"
+                                ng-dblclick="editItem()"
+                                ng-class="{'active': isSelected(it),'disabled': !isTrue(it.active)}">
+                                <td width="30" class="text-right text-muted">{{startIdx + $index + 1}}.</td>
+                                <td width="30" header="'custom.checked.html'">
+                                    <input type="checkbox" ng-model="checkboxes.items[it[pkField]]" />
+                                </td>
+                                <td data-title="'ชื่อเรื่อง'" sortable="'topic'">
+                                    <span class="fa {{it.type_id|lookup_type:'icon'}}" ng-class="{'active':isTrue(it.active),'inactive':!isTrue(it.active)}"></span> {{it.topic}} <span class="badge">{{it.code}}</span>
+                                </td>
+                                <td data-title="'กลุ่มสาระ'" sortable="'group_id'">
+                                    {{it.group_id | lookup_group}}
+                                </td>
+                                <td data-title="'วิชาเรียน'" sortable="'subject_id'">
+                                    {{it.subject_id | lookup_subject}}
+                                </td>
+                                <td data-title="'ระดับชั้นเรียน'" sortable="'level_id'" class="text-center" header-class="'text-center'">
+                                    {{it.level_id | lookup_level}}
+                                </td>
+                                <td data-title="'คะแนนประเมิน'" class="text-center" header-class="'text-center'">
+                                    {{it.evaluate_score|number:1 || '-'}}
+                                </td>
+                                <td data-title="''" width="25">
+                                    <button ng-if="isSelected(it)" ng-click="viewEvaluate($it)" class="btn text-primary btn pull-right"><span class="fa fa-th-list"> รายงาน <span class="fa fa-arrow-right"></span></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,176 @@
+<style>
+ul.intro li{padding-bottom:0.5em;padding-top:0.5em}
+</style>
+<div  ng-controller="HomeCtrl">
+	<p>
+		<div class="row">
+			<div class="col-sm-12 col-md-12">
+			<a href="#/user/search"class="btn btn-info btn-lg btn-block"><span class="fa fa-search"></span> ค้นหาสื่ออื่นๆ</a>
+			</div>
+		</div>
+	</p>
+	<p>	
+		<div class="row">
+		<div class="col-md-6">
+		<ul class="list-group">
+		<li class="list-group-item" ng-if="new_items.length" style="background-color:#f7f7f7">
+			<h3 class="text-primary"><span class="glyphicon glyphicon-film"></span> สื่อใหม่ล่าสุด </h3>
+		</li>
+		<li class="list-group-item" ng-if="new_items.length">
+			
+			<div class="row row-centered">
+				<div class="col-sm-12 col-lg-6 col-centered" ng-repeat="it in new_items">
+					<div class="list-group" ng-click="openMedia(it)">
+						<div class="list-group-item">
+							<img class="img img-responsive xthumb" onerror="this.src='images/thumb.png'" ng-src="uploads/{{it.user_id}}/{{it.thumb}}?v={{it.date_modified | date_version}}"></img>
+	
+							<h4 class="list-group-item-header text-primary">{{it.topic}}</h4>
+							<div>
+								<strong>โดย:</strong> {{it.user_id |lookup_teacher}}
+							</div>
+							<div>
+								<strong>วันที่:</strong> {{it.date_created|thai_date}}
+							</div>
+							<div>
+								<strong>ดู:</strong>  {{it.views||0}} ครั้ง  
+							</div>
+							
+						</div>
+					</div>
+				</div>
+				
+			</div>
+		</li>
+		</ul>
+		
+		<ul class="list-group">
+		<li class="list-group-item" ng-if="top_items.length" style="background-color:#f7f7f7">
+			<h3 class="text-primary"><span class="glyphicon glyphicon-equalizer"></span> สื่อที่มีผู้ชมมากสุด</h3>
+		</li>
+		<li class="list-group-item" ng-if="top_items.length">
+			
+			<div class="row row-centered">
+				<div class="col-sm-12 col-lg-6 col-centered" ng-repeat="it in top_items">
+					<div class="list-group"  ng-click="openMedia(it)">
+						<div class="list-group-item">
+							<img class="img img-responsive xthumb" onerror="this.src='images/thumb.png'" ng-src="uploads/{{it.user_id}}/{{it.thumb}}?v={{it.date_modified | date_version}}"></img>
+	
+							<h4 class="list-group-item-header text-primary">{{it.topic}}</h4>
+							<div>
+								<strong>โดย:</strong> {{it.user_id |lookup_teacher}}
+							</div>
+							<div>
+								<strong>วันที่:</strong> {{it.date_created|thai_date}}
+							</div>
+							<div>
+								<strong>ดู:</strong>  {{it.views||0}} ครั้ง  
+							</div>
+							
+						</div>
+					</div>
+				</div>	
+			</div>
+		</li>
+		</ul>
+		</div>
+		
+		
+		<div class="col-md-6">
+		<ul class="list-group">
+		<li class="list-group-item" style="background-color:#f7f7f7">
+			<h3 class="text-primary"><span class="glyphicon glyphicon-question-sign"></span> แนะนำการใช้งานเบื้องต้น</h3>
+		</li>
+		<li class="list-group-item">
+			
+				<h4 class="text-info"><span class="glyphicon glyphicon-info-sign"></span> การกำหนดสิทธิ์ในการใช้งานของผู้ใช้แต่ละระดับ</h4>
+				<blockquote class="text-help">
+ผู้ใช้งานที่ทำการสมัคร ลงทะเบียนใหม่
+
+<ul class="intro">
+<li> จะมีการตรวจสอบคุณสมบัติของผู้ใช้และรอการอนุมัติเข้าใช้งานจากผู้ดู
+
+แลระบบ โดยจะมีการส่ง รหัสผู้ใช้ และ รหัสผ่านให้ทางอีเมล์</li>
+
+<li> ผู้ใช้แต่ละระดับสามารถ Login เข้าใช้งานตามสิทธิ์ที่ตนเองได้รับ</li>
+
+<li> จะมีรูปไอคอนของผู้ใช้ปรากฏที่มุมบนด้านขวาของชื่อระบบ  </li>
+</ul>
+สามารถคลิกเลือกใช้งานเมนูต่าง ๆ 
+
+ได้ตามสิทธิ์ของผู้ใช้ในแต่ละระดับ
+				</blockquote>
+				
+				<h4 class="text-info"><span class="glyphicon glyphicon-info-sign"></span> ชนิดของสื่อการเรียนรู้ที่ทำการอัพโหลดสำหรับครูผู้สอน</h4>
+				<blockquote class="text-help">
+<ul class="intro">				
+<li> สื่อที่เป็นวีดีโอ (.mp4) </li>
+
+<li> สื่อที่เป็นเสียง (.mp3) </li>
+
+<li> สื่อที่เป็นเอกสาร (.ppt  .doc  .pdf) </li>
+
+<li> ขนาดความจุของข้อมูลสื่อแต่ละชนิด ไม่ควรเกิน 100 mb</li>
+</ul>
+				</blockquote>
+				
+
+				<h4 class="text-info"><span class="glyphicon glyphicon-info-sign"></span> สื่อการเรียนรู้ที่ ห้าม ที่จะอัพโหลดเข้าสู่ระบบ</h4>
+				<blockquote class="text-help">
+<ul class="intro">				
+<li>ไม่พาดพิงถึงสถาบันพระมหากษัตริย์และราชวงศ์
+
+ไปในทางเสื่อมเสียเป็นอันขาด</li>
+
+<li> ไม่ส่อไปในทางลามก อนาจาร</li>
+
+<li>ไม่ก่อให้เกิดความเสียหายหรือเป็นความผิดต่อความมั่นคงของประเทศ</li>
+
+<li> ไม่ก่อให้เกิดความตื่นตระหนกของประชาชน</li>
+
+<li> ไม่เป็นความผิดเกี่ยวกับการก่อการร้ายตามประมวลกฎหมายอาญา</li>
+
+<li> ไม่ตัดต่อภาพบุคคล ที่อาจทำให้เกิดความเสื่อมเสียแก่บุคคลนั้น</li>
+
+<li> ไม่ผิดกฎหมายทุกบทบัญญัติ รวมทั้ง 
+
+พระราชบัญญัติว่าด้วยการกระทำผิดเกี่ยวกับคอมพิวเตอร์ พ.ศ. 
+
+๒๕๕๐</li>
+
+<li> ไม่ละเมิดลิขสิทธิ์ รวมถึง เครื่องหมายการค้า ทุกชนิด</li>
+
+<li> ขอสงวนสิทธิ์ในการลบไฟล์ที่ผู้ใช้บริการ อัพโหลดขึ้นมา 
+
+แต่ผิดเงื่อนไขดังกล่าวข้างต้นทุกกรณี</li>
+
+<li>ไม่รับรองความสมบูรณ์ของไฟล์และข้อมูลอื่นๆ ในเว็บไซต์
+
+และไม่รับผิดชอบในความผิดพลาดที่อาจเกิดขึ้น 
+
+จากการนําข้อมูลดังกล่าวไปใช้ในทุกกรณี โดยไม่มีข้อยกเว้น</li>
+
+<li> หากไฟล์ที่ผู้ใช้อัพโหลดขึ้นมาในเซิฟเวอร์เป็นไฟล์ที่มีลิขสิทธิ์ 
+
+ทางผู้ใช้ต้องรับผิดชอบและสามารถยืนยันได้ว่าไฟล์ที่ท่านอัพโหลดขึ้นม
+
+านั้นท่านมีสิทธิใช้งานอย่างถูกต้อง 
+
+และไม่นำลิงค์ไปเผยแพร่ต่อในสถานที่สาธารณะ 
+
+แต่ผู้ใช้สามารถนำไปใช้เพื่อตนเองและผู้อื่นในครอบครัวหรือญาติส
+
+นิทได้ หากได้รับแจ้งว่ามีการเผยแพร่ไฟล์ในสถานที่สาธารณะ 
+
+ทางผู้ดูแลระบบขอสงวนสิทธิ์ในการลบไฟล์ดังกล่าวบนเซิฟเวอร์  
+
+ซึ่งอาจเป็นผลทำให้ท่านไม่สามารถใช้งานระบบได้</li>
+</ul>
+				</blockquote>				
+		
+		</li>	
+		</ul>
+		</div>
+		</div>
+	</p>
+
+</div>

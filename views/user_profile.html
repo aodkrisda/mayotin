@@ -1,0 +1,183 @@
+﻿
+<script type="text/ng-template" id="custom.form.password.html">
+    <div class="modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" aria-label="Close" ng-click="$hide()"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title"><span ng-class="getModalIcon(1)"></span> เปลี่ยนรหัสผ่าน</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" name="form" novalidate>
+                        <fieldset>
+
+                            <div class="form-group" ng-class="{ 'has-error' : form.fd1.$invalid && form.$dirty}">
+                                <!-- Text input-->
+                                <label class="col-md-4 control-label">รหัสผ่านเดิม</label>
+                                <div class="col-md-7">
+                                    <input type="text" autofocus name="fd1" placeholder="ยังไม่มีข้อมูล" required ng-model="editingItem2.password" class="form-control input-md">
+                                    <p class="help-block" ng-show="form.fd1.$invalid && form.$dirty"><span class="glyphicon glyphicon-warning-sign"></span> ต้องป้อนรหัสผ่านเดิมก่อน</p>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-class="{ 'has-error' : form.fd2.$invalid && form.$dirty}">
+                                <!-- Select Basic -->
+                                <label class="col-md-4 control-label">รหัสผ่านใหม่</label>
+                                <div class="col-md-7">
+                                    <input type="text" autofocus name="fd2" placeholder="ยังไม่มีข้อมูล" required ng-model="editingItem2.password2" class="form-control input-md">
+                                    <p class="help-block" ng-show="form.fd2.$invalid && form.$dirty"><span class="glyphicon glyphicon-warning-sign"></span> ต้องป้อนรหัสผ่านใหม่ก่อน</p>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-class="{ 'has-error' : form.fd3.$invalid && form.$dirty}">
+                                <!-- Text input-->
+                                <label class="col-md-4 control-label">ยืนยันรหัสผ่านใหม่</label>
+                                <div class="col-md-7">
+                                    <input type="text" autofocus name="fd3" placeholder="ยังไม่มีข้อมูล" required validate-match data-match="editingItem2.password2" ng-model="editingItem2.password3" class="form-control input-md">
+                                    <p class="help-block" ng-show="form.fd3.$invalid && form.$dirty"><span class="glyphicon glyphicon-warning-sign"></span> ต้องป้อนยืนยันรหัสผ่านใหม่ให้ถูกต้องก่อน</p>
+                                </div>
+                                 
+                            </div>
+                        </fieldset>
+                        <div class="row">
+                        <div class="col-md-offset-4 col-md-7  text-primary" data-ng-show="form.$invalid"><strong><u>หมายเหตุ</u></strong> ต้องกรอกข้อมูลให้ ถูกต้อง ครบถ้วนก่อน จึงจะสามารบันทึกข้อมูลได้</div>
+                        </div>                        
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" style="min-width:12em" class="btn btn-primary" ng-disabled="!(form.$dirty && form.$valid)" ng-click="savePass($hide)"><span class="glyphicon glyphicon-floppy-disk"></span> บันทึกข้อมูล</button>
+                    <button type="button" style="min-width:12em" class="btn btn-warning" ng-click="$hide()"><span class="glyphicon glyphicon-ban-circle"></span> ยกเลิก</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+
+
+<div class="col-md-12" ng-controller="ProfileCtrl" ng-init="editing=false" >
+            <div class="modal-content" style="margin-top:1em;margin-bottom:1em;">
+                <div class="modal-header">
+                    <!--<button type="button" class="close" aria-label="Close" ng-click="$hide()"><span aria-hidden="true">&times;</span></button>-->
+                    <h4 class="modal-title"> <span class="fa fa-user"></span> ข้อมูลส่วนตัว</h4>
+                </div>
+                <div class="modal-body">
+<div class="row">                
+                	<div class="col-md-1 col-md-offset-1">
+
+
+<div  flow-init="{target: API_URL + 'upload/photo'}"  flow-file-added="validateFile($file)" flow-complete="upflow.updateThumb($flow);" flow-files-submitted="$flow.upload()" flow-file-success="$file.response = $message;getModified();changePhoto()" >
+	<div style="margin-left:1em;height:128px;width:128px;"  class="drop" flow-drop ng-class="dropClass"  flow-drag-enter="dropClass='drag-over'" flow-drag-leave="dropClass=''">
+		<div flow-btn flow-single-file="true" flow-attrs="{accept:'image/*'}" style="border:solide 1px #ff0000">
+			<img class="img img-responsive" align="middle" ng-src="uploads/photos/{{editingItem._id_}}.jpg?v{{editingItem.date_modified | date_version}}{{uptime}}" onerror="this.src='images/photo.png'"/>
+			<h5>คลิกเปลี่ยนภาพ</h5>
+		</div>
+	</div>
+
+</div>
+
+                   	
+                	</div>
+                	
+                	<div class="col-md-10">
+
+
+                    <form class="form-horizontal clear-fix" name="form" novalidate>
+                        <fieldset>
+                	<div ng-if="sizeError" class="col-md-offset-4 col-md-7">
+        				<div  class="alert alert-warning"><span class="glyphicon glyphicon-exclamation-sign"><span> {{sizeError}}</div>
+        			</div>                        
+                            <div class="form-group">
+                                <!-- Text input-->
+                                <label class="col-md-4 control-label">เลขประจำตัว</label>
+                                <div class="col-md-7">
+                                    <p class="form-control-static">{{editingItem.user_id}}</p>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-class="{ 'has-error' : form.fd1.$invalid && form.$dirty}">
+                                <!-- Text input-->
+                                <label class="col-md-4 control-label">คำนำหน้าชื่อ</label>
+                                <div class="col-md-7">
+                                	<p ng-if="!editing" class="form-control-static">{{editingItem.title}}</p>
+                                    <select  ng-if="editing" name="fd1" class="form-control input-md" input-selected ng-model="editingItem.title" select-value-type="string" ng-options="it.name as it.name for it in Lookups.getTitle()">
+                                        <option value=""></option>
+                                    </select>
+                                    <p class="help-block" ng-show="form.fd1.$invalid && form.$dirty"><span class="glyphicon glyphicon-warning-sign"></span> ต้องเลือกคำนำหน้าชื่อก่อน</p>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-class="{ 'has-error' : form.fd2.$invalid && form.$dirty}">
+                                <!-- Text input-->
+                                <label class="col-md-4 control-label">ชื่อ</label>
+                                <div class="col-md-7">
+                                	<p ng-if="!editing" class="form-control-static">{{editingItem.first_name}}</p>
+                                    <input  ng-if="editing" name="fd2" autofocus type="text" placeholder="ยังไม่มีข้อมูล" required ng-model="editingItem.first_name" class="form-control input-md">
+                                   <p class="help-block" ng-show="form.fd2.$invalid && form.$dirty"><span class="glyphicon glyphicon-warning-sign"></span> ต้องป้อนชื่อก่อน</p>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-class="{ 'has-error' : form.fd3.$invalid && form.$dirty}">
+                                <!-- Text input-->
+                                <label class="col-md-4 control-label">นามสกุล</label>
+                                <div class="col-md-7">
+                                	<p ng-if="!editing" class="form-control-static">{{editingItem.last_name}}</p>
+                                    <input  ng-if="editing" type="text" name="fd3" placeholder="ยังไม่มีข้อมูล" required ng-model="editingItem.last_name" class="form-control input-md">
+                                     <p class="help-block" ng-show="form.fd3.$invalid && form.$dirty"><span class="glyphicon glyphicon-warning-sign"></span> ต้องป้อนนามสกุลก่อน</p>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-class="{ 'has-error' : form.fd4.$invalid && form.$dirty}">
+                                <!-- Text input-->
+                                <label class="col-md-4 control-label">อีเมล์</label>
+                                <div class="col-md-7">
+                                	<p ng-if="!editing" class="form-control-static">{{editingItem.email}}</p>
+                                    <input  ng-if="editing" type="text" name="fd4" maxlength="50" name="fd4" placeholder="ยังไม่มีข้อมูล" validate-email required ng-model="editingItem.email" class="form-control input-md">
+                                     <p class="help-block" ng-show="form.fd4.$invalid && form.$dirty"><span class="glyphicon glyphicon-warning-sign"></span> ต้องป้อนอีเมล์ให้ถูกต้องก่อน</p>
+                                </div>
+                            </div> 
+                            <div class="form-group" ng-if="$root.isRole(editingItem.user_type,'teacher')" ng-class="{ 'has-error' : form.fd5.$invalid && form.$dirty}">
+                                <!-- Text input-->
+                                <label class="col-md-4 control-label">กลุ่มสาระ</label>
+                                <div class="col-md-7">
+                                	<p ng-if="!editing" class="form-control-static">{{editingItem.group_id | lookup_group}}</p>
+                                    <select  ng-if="editing" name="fd5" class="form-control input-md" input-selected ng-model="editingItem.group_id" select-value-type="string" ng-options="it.group_id as it.name for it in Lookups.getGroup()">
+                                        <option value=""></option>
+                                    </select>
+									<p class="help-block" ng-show="form.fd5.$invalid && form.$dirty"><span class="glyphicon glyphicon-warning-sign"></span> ต้องเลือกกลุ่มสาระก่อน</p>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-if="!$root.isRole(editingItem.user_type,'admin','manager','director')"  ng-class="{ 'has-error' : form.fd6.$invalid && form.$dirty}">
+                                <!-- Text input-->
+                                <label class=" col-md-4 control-label">ระดับชั้น</label>
+                                <div class="col-md-7">
+                                	<p ng-if="!editing" class="form-control-static">{{editingItem.level_id | lookup_level}}</p>
+                                    <select ng-if="editing" name="fd6" class="form-control input-md" input-selected ng-model="editingItem.level_id" select-value-type="string" ng-options="it.level_id as it.name for it in Lookups.getLevel()">
+                                        <option value=""></option>
+                                    </select>
+                                     <p class="help-block" ng-show="form.fd6.$invalid && form.$dirty"><span class="glyphicon glyphicon-warning-sign"></span> ต้องเลือกกลุ่มสาระก่อน</p>
+                                </div>
+                            </div>
+
+
+                        </fieldset>
+                        <div class="row">
+                        <div class="col-md-offset-4 col-md-7" data-ng-show="form.$invalid"><strong><u>หมายเหตุ</u></strong> ต้องกรอกข้อมูลให้ ถูกต้อง ครบถ้วนก่อน จึงจะสามารถบันทึกได้</div>
+                        </div>                        
+                    </form>
+    
+                    </div>
+					</div>
+                </div>
+                <div class="modal-footer" >
+                	<div class="col-md-offset-3 col-md-6 col-sx-12">
+                	<div class="col-md-4">
+                		<button ng-if="!editing" ng-click="setEdit(true)" style="min-width:10em;" type="button" class="btn btn-primary btn-block" ><span class="glyphicon glyphicon-pencil"></span> แก้ไขข้อมูล</button>
+                    	<button ng-if="editing" style="min-width:10em;" type="button" class="btn btn-primary btn-block" ng-disabled="!(form.$dirty && form.$valid)" ng-click="saveProfile(editingItem)"><span class="glyphicon glyphicon-floppy-disk"></span> บันทึกข้อมูล</button>
+                    </div>                	
+                	<div class="col-md-4">
+                		<button style="min-width:10em;" type="button" class="btn btn-info btn-block" ng-click="changePass()"><span class="glyphicon glyphicon-asterisk"></span> เปลี่่ยนรหัสผ่าน</button>
+                	</div>
+
+                    <div class="col-md-4">
+                    	<button  style="min-width:10em;" type="button" class="btn btn-warning btn-block" ng-click="doCancel()"><span class="glyphicon glyphicon-ban-circle"></span> ยกเลิก</button>
+                    </div>
+                    </div>
+                </div>
+            </div>
+</di>

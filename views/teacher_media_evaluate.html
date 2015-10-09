@@ -1,0 +1,285 @@
+﻿<style>
+  .add-vspace{
+  padding-top:0.5em;
+  }
+  .add-vspace-bottom{
+  padding-bottom:1em;
+  }
+</style>
+
+<!-- manager -->
+<style>
+table.evaluate td {min-width:3em}
+table.evaluate td.ngroup {padding-left:2em}
+table.evaluate td.group {font-weight:bold}
+
+
+</style>
+
+
+
+<ul class="nav nav-pills nav-justified" ng-init="currentTab=3">
+    <li role="presentation text-info" ng-class="{'active':currentTab==3}"><a href="javascript:void(0)" ng-click="currentTab=3"><h3><span class="fa fa-list"></span> สถิติการใช้งาน</h3></a></li>
+  
+  <li role="presentation text-info" ng-class="{'active':currentTab==1}"><a href="javascript:void(0)" ng-click="currentTab=1"><h3><span class="fa fa-list"></span> แบบประเมินคณะกรรมการ</h3></a></li>
+  <li role="presentation text-info" ng-class="{'active':currentTab==2}"><a href="javascript:void(0)" ng-click="currentTab=2"><h3><span class="fa fa-list"></span> แบบประเมินผู้ใช้สื่อ</h3></a></li>
+
+</ul>
+<br/>
+        <div class="list-group" ng-controller="TeacherEval2Ctrl" style="min-width:80%" ng-if="currentTab==1">
+            <div class="list-group-item">
+                <div class="modal-body">
+                	<div class="text-center center-block">
+                	<h3 class="text-primary">แบบประเมินคณะกรรมการ<span><br>จำนวนผู้ประเมิน ({{count}})</span></h3>
+                	</div>
+                	
+                	 <hr/>
+                	 <div style="padding-left:2em;padding-right:2em">
+                	 <p><strong>ชื่อครู:</strong> {{teacherMedia.user_id|lookup_teacher}} <span class="pull-right"><strong>สังกัดระดับการศึกษา:</strong> {{$root.getUser().level_id | lookup_level}}<span></p>
+                	 <p><strong>ชื่อผลงาน:</strong> {{teacherMedia.topic}} <span class="pull-right"><strong>ประเภทเสื่อ:</strong> {{teacherMedia.type_id | lookup_type}}<span></p>
+                	 </div>
+               	 
+                    <table class="table table-bordered evaluate">
+                    	<tr>
+                    		<th valign="middle" class="text-center" rowspan="2"><br> <i ng-if="items.length<1" class="fa fa-refresh fa-spin"></i> รายการประเมิน</th>
+                    		<th class="text-center" colspan="5" >คะแนน</th> 
+                    	</tr>
+                    	<tr>
+                    		<th class="text-center">0</th>
+                    		<th class="text-center">1</th>
+                    		<th class="text-center">2</th>
+                    		<th class="text-center">3</th>
+                    		<th class="text-center">4</th>
+                    	</tr>
+                    	<tr class="text-center" ng-repeat="it in items">
+                    		<td ng-if="it.group===true" class="text-left group">{{it.name}}</td>
+                    		<td ng-if="it.group!==true" class="text-left ngroup">{{it.name}}</td>
+                    		<td ng-class="tdClass(it)"><span ng-if="it.group!==true && it.score0>0" class="badge">{{it.score0 || 0}}</span></td>
+                    		<td ng-class="tdClass(it)"><span ng-if="it.group!==true && it.score1>0" class="badge">{{it.score1 || 0}}</span></td>
+                    		<td ng-class="tdClass(it)"><span ng-if="it.group!==true && it.score2>0" class="badge">{{it.score2 || 0}}</span></td>
+                    		<td ng-class="tdClass(it)"><span ng-if="it.group!==true && it.score3>0" class="badge">{{it.score3 || 0}}</span></td>
+                    		<td ng-class="tdClass(it)"><span ng-if="it.group!==true && it.score4>0" class="badge">{{it.score4 || 0}}</span></td>
+                    	</tr>
+                    	<tr class="text-center">
+                    		<th class="text-right">สรุปจำนวนคะแนน</th>
+                    		<th class="text-center">{{score_group['0']}}</th>
+                    		<th class="text-center">{{score_group['1']}}</th>
+                    		<th class="text-center">{{score_group['2']}}</th>
+                    		<th class="text-center">{{score_group['3']}}</th>
+                    		<th class="text-center">{{score_group['4']}}</th>
+                    	</tr>   
+                    	<tr class="text-center">
+                    		<th class="text-right">รวมคะแนน </th>
+                    		<th class="text-center" colspan="5">{{rawscore}} / {{score_total}}</th>
+                    	</tr>                      	
+                    	<tr class="text-center text-primary">
+                    		<th class="text-right">สรุปผลการประเมิน</th>
+                    		<th colspan="5" class="text-center">{{(score_result)|number:1}}<br>{{score_result_text}}</th>
+
+                    	</tr>  
+                    	
+                    </table>
+                    <div class="row" style="padding-left:3em" ng-show="comments.length">
+                    
+                   		<h4 class="text-primary"><i class="fa fa-comment-o fa-lg"></i> ข้อเสนอแนะในการปรับปรุง</h4>
+                   		<div ng-repeat="it in comments">
+                   			<strong><span class="fa fa-user"></span> {{it.user_title}} {{it.first_name}} {{it.last_name}}</strong>
+                    		<blockquote style="font-size:1em;margin-left:1em">
+                    			<p ng-bind-html="it.comment|nl2br">
+                    			
+                    			</p>
+                    			<footer>วันที่ {{it.date_modified | thai_date :'full'}}</footer>
+                    		</blockquote>
+                    	</div>
+                    </div>
+                    
+                    <hr/>
+					<div class="row" style="padding-left:2em">
+						
+						<div class="col-md-6">
+						<strong>เกณฑ์การให้คะแนน</strong><br>
+						<ul class="list-unstyled" style="padding-left:1em">
+							<li>0 = ไม่ปรากฏ</li>
+							<li>1 = มีความเหมาะสมน้อย</li>
+							<li>2 = มีความเหมาะสมปานกลาง</li>
+							<li>3 = มีความเหมาะสมมาก</li>
+							<li>4 = ดีมาก</li>
+						</ul>
+						</div>
+						<div class="col-md-6">
+						<strong>เกณฑ์การแปลผลจากคะแนนรวม</strong><br>
+						<ul class="list-unstyled" style="padding-left:1em">
+							<li>0 - <1 = ต้องปรับปรุง</li>
+							<li>1 - <2 = ควรปรับปรุง</li>
+							<li>2 - <3 = พอใช้</li>
+							<li>3 - <4 = ดี</li>
+							<li>4 = ดีมาก</li>
+						</ul>	
+						</div>					
+						
+					</div>
+			
+
+                </div>
+
+            </div>
+        </div>
+        
+
+<!--- user  -->
+
+        <div class="list-group" ng-controller="TeacherEvalCtrl" style="min-width:80%"  ng-if="currentTab==2">
+            <div class="list-group-item">
+                <div class="modal-body">
+                	<div class="text-center center-block">
+                	<h3 class="text-primary">แบบประเมินผู้ใช้สื่อ<br>จำนวนผู้ประเมิน ({{count}})</h3>
+                	</div>
+               	
+                	 <hr/>
+                	 <div style="padding-left:2em;padding-right:2em">
+                	 <p><strong>ชื่อครู:</strong> {{teacherMedia.user_id|lookup_teacher}} <span class="pull-right"><strong>สังกัดระดับการศึกษา:</strong> {{$root.getUser().level_id | lookup_level}}<span></p>
+                	 <p><strong>ชื่อผลงาน:</strong> {{teacherMedia.topic}} <span class="pull-right"><strong>ประเภทเสื่อ:</strong> {{teacherMedia.type_id | lookup_type}}<span></p>
+                	 </div>
+             
+                    <table class="table table-bordered evaluate">
+                    	<tr>
+                    		<th valign="middle" class="text-center" rowspan="2"><br>รายการประเมิน</th>
+                    		<th class="text-center" colspan="5" >คะแนน</th> 
+                    	</tr>
+                    	<tr>
+                    		<th class="text-center">0</th>
+                    		<th class="text-center">1</th>
+                    		<th class="text-center">2</th>
+                    		<th class="text-center">3</th>
+                    		<th class="text-center">4</th>
+                    	</tr>
+                    	<tr class="text-center" ng-repeat="it in items">
+                    		<td class="text-left">{{it.id}}. {{it.name}}</td>
+                    		<td><span ng-if="it.group!==true && it.score0>0" class="badge">{{it.score0 || 0}}</span></td>
+                    		<td><span ng-if="it.group!==true && it.score1>0" class="badge">{{it.score1 || 0}}</span></td>
+                    		<td><span ng-if="it.group!==true && it.score2>0" class="badge">{{it.score2 || 0}}</span></td>
+                    		<td><span ng-if="it.group!==true && it.score3>0" class="badge">{{it.score3 || 0}}</span></td>
+                    		<td><span ng-if="it.group!==true && it.score4>0" class="badge">{{it.score4 || 0}}</span></td>
+                    	</tr>
+                    	<tr class="text-center">
+                    		<th class="text-right">สรุปจำนวนคะแนน</th>
+                    		<th class="text-center">{{score_group['0']}}</th>
+                    		<th class="text-center">{{score_group['1']}}</th>
+                    		<th class="text-center">{{score_group['2']}}</th>
+                    		<th class="text-center">{{score_group['3']}}</th>
+                    		<th class="text-center">{{score_group['4']}}</th>
+                    	</tr>   
+                    	<tr class="text-center">
+                    		<th class="text-right">รวมคะแนน </th>
+                    		<th class="text-center" colspan="5">{{rawscore}} / {{score_total}}</th>
+                    	</tr>                      	
+                    	<tr class="text-center text-primary">
+                    		<th class="text-right">สรุปผลการประเมิน</th>
+                    		<th colspan="5" class="text-center">{{(score_result)|number:1}}<br>{{score_result_text}}</th>
+
+                    	</tr>  
+                    </table>
+                    <hr/>
+					<div class="row" style="padding-left:2em">
+						
+						<div class="col-md-6">
+						<strong>เกณฑ์การให้คะแนน</strong><br>
+						<ul class="list-unstyled" style="padding-left:1em">
+							<li>0 = ไม่ปรากฏ</li>
+							<li>1 = มีความเหมาะสมน้อย</li>
+							<li>2 = มีความเหมาะสมปานกลาง</li>
+							<li>3 = มีความเหมาะสมมาก</li>
+							<li>4 = ดีมาก</li>
+						</ul>
+						</div>
+						<div class="col-md-6">
+						<strong>เกณฑ์การแปลผลจากคะแนนรวม</strong><br>
+						<ul class="list-unstyled" style="padding-left:1em">
+							<li>0 - <1 = ต้องปรับปรุง</li>
+							<li>1 - <2 = ควรปรับปรุง</li>
+							<li>2 - <3 = พอใช้</li>
+							<li>3 - <4 = ดี</li>
+							<li>4 = ดีมาก</li>
+						</ul>	
+						</div>					
+						
+					</div>
+			
+
+                </div>
+
+            </div>
+        </div>
+	<ul class="list-group" ng-if="currentTab==3" ng-controller="TeacherMediaSumaryCtrl" ng-init="loadSumary(teacherMedia.media_id)">
+		<li class="list-group-item">
+			<div class="media">
+				<div class="media-left">
+					<img onerror="this.src='images/thumb.png'" ng-src="uploads/{{teacherMedia.user_id}}/{{teacherMedia.thumb}}?v={{teacherMedia.date_modified | date_version}}" width="128"/>
+				</div>
+				<div class="media-body">
+				<h3 class="list-group-item-heading">{{teacherMedia.media_id}}</h3>
+				<p class="list-group-item-text">
+				<blockquote>
+					<span class="text-primary">{{teacherMedia.topic}}</span><br>
+					<span class="text-info">{{teacherMedia.description}}</span>
+				</blockquote>
+				</p>
+				</div>
+			</div>
+		</li>
+		<li class="list-group-item">
+			<strong><span class="fa fa-calendar"></span> วันที่อัพโหลด</strong>
+			<span class="badge">{{teacherMedia.date_created | thai_date:'full'}} </span>
+		</li>	
+		<li class="list-group-item">
+			<strong><span class="fa fa-calendar"></span> วันที่แก้ไขล่าสุด</strong>
+			<span class="badge">{{teacherMedia.date_modified | thai_date:'full'}} </span>
+		</li>					
+		<li class="list-group-item">
+			<strong><span class="fa fa-calendar"></span> ผู้ใช้เข้าดูครั้งแรก</strong>
+			<span class="badge">{{sumary.first_used | thai_date:'full'}} </span>
+		</li>	
+		<li class="list-group-item">
+			<strong><span class="fa fa-calendar"></span> ผู้ใช้เข้าดูครั้งล่าสุด</strong>
+			<span class="badge">{{sumary.last_used | thai_date:'full'}} </span>
+		</li>	
+		<li class="list-group-item">
+			<strong><span class="fa fa-users"></span>  จำนวนผู้ใช้ที่เข้าดู</strong>
+			<span class="badge">{{sumary.count_user||0 | number:0}} </span>
+		</li>		
+		<li class="list-group-item">
+			<strong><span class="fa fa-desktop"></span> จำนวนครั้งที่เข้าดู</strong>
+			<span class="badge">{{sumary.count_view||0 | number:0}} </span>
+		</li>
+		<li class="list-group-item">
+			<strong><span class="fa fa-thumbs-up"></span> จำนวน Like</strong>
+			<span class="badge">{{sumary.count_like||0 | number:0}} </span>
+		</li>	 
+		<li class="list-group-item">
+			<strong><span class="fa fa-thumbs-down"></span> จำนวน Unlike</strong>
+			<span class="badge">{{sumary.count_unlike||0 | number:0}} </span>
+		</li>
+		<li class="list-group-item">
+			<strong><span class="fa fa-comment"></span> จำนวนข้อความคิดเห็น</strong>
+			<span class="badge">{{sumary.count_comment||0 | number:0}} </span>
+		</li>		
+		<li class="list-group-item">
+			<strong><span class="fa fa-bar-chart"></span> คะแนนประเมินจากผู้ใช้</strong>
+			<span class="badge">{{sumary.user_score||0 | number:1}} </span>
+		</li>
+		<li class="list-group-item">
+			<strong><span class="fa fa-users"></span> จำนวนผู้ใช้ที่ประเมิน</strong>
+			<span class="badge">{{sumary.count_rating||0 | number:0}} </span>
+		</li>		
+		<li class="list-group-item">
+			<strong><span class="fa fa-bar-chart"></span> คะแนนประเมินจากคณะกรรมการ</strong>
+			<span class="badge">{{teacherMedia.evaluate_score||0 | number:1}} </span>
+		</li>
+		<li class="list-group-item">
+			<strong><span class="fa fa-users"></span> จำนวนคณะกรรมการที่ประเมิน</strong>
+			<span class="badge">{{teacherMedia.evaluate_count||0 | number:0}} </span>
+		</li>																		
+	</ul>
+<br/> 
+<button class="btn btn-success btn-block btn-lg" ng-click="backEvaluate()"><span class="glyphicon glyphicon-arrow-left"></span> กลับไปที่รายการสื่อ</button>
+<br/> 

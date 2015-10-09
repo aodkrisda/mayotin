@@ -1,0 +1,213 @@
+﻿        <style>
+            .adon-label {
+                width: 150px;
+                text-align: 'right';
+            }
+            .pdr2{
+            	padding-right:2em;
+            }
+			.big{
+				font-size:1.8em;
+			}
+			.chart {
+ width: 500px;
+ height: 500px;
+}
+        </style>
+
+
+
+
+
+
+<form class="form" ng-controller="DirectorCtrl" >
+    <div ng-controller="FilterCtrl">
+       
+        <div ng-click="toggleFilter()" class="btn btn-success pull-right">
+            <span ng-if="!filterIsShow()"><span class="glyphicon glyphicon-search"></span> ค้นหา</span>
+            <span ng-if="filterIsShow()"><span class="glyphicon glyphicon-eye-close"></span> ซ่อน</span>
+        </div>
+
+        <div clss="row" ng-show="filterIsShow()">
+
+            <div class="col-md-6 col-md-offset-3">
+                <label>ช่วงเวลาที่สร้างสื่อ</label>
+                <div class="row">
+                    <div class="col-md-6">
+                        <span mode="1" ng-change="setFilter()" ng-model="options.date_from" placeholder="ข้อมูลของเดือน" custom-date-field></span>
+                    </div>
+
+
+                    <div class="col-md-6">
+                        <span mode="1" ng-change="setFilter()" ng-model="options.date_to" placeholder="เปรียบเทียบกับเดือน" custom-date-field></span>
+                    </div>
+
+                </div>
+                <br>
+            </div>
+            <div class="row"></div>
+            <div class="input-group col-md-6 col-md-offset-3">
+                <div class="input-group-addon  adon-label">กลุ่มสาระ</div>
+                <select class="form-control" ng-change="changeGroup(options.group)" select-default ng-model="options.group" select-value-type="string" ng-options="it.group_id as it.name for it in Lookups.getGroup()">
+                    <option value="">ทั้งหมด</option>
+                </select>
+                <div class="input-group-addon btn btn-default" ng-click="setFilter()"><span class="glyphicon glyphicon-filter"></span></div>
+            </div>
+            <div class="input-group col-md-6 col-md-offset-3">
+                <div class="input-group-addon adon-label">วิชาเรียน</div>
+                <select class="form-control" ng-change="setFilter()" select-default ng-model="options.subject" select-value-type="string" ng-options="it.subject_id as it.name for it in getSubject()">
+                    <option value="">ทั้งหมด</option>
+                </select>
+                <div class="input-group-addon btn btn-default" ng-click="setFilter()" title="เริ่มค้นหา"><span class="glyphicon glyphicon-filter"></span></div>
+            </div>
+            <div class="input-group col-md-6 col-md-offset-3">
+                <div class="input-group-addon  adon-label">ผู้สอน</div>
+                <select class="form-control" ng-change="changeTeacher(options.teacher)" select-default ng-model="options.teacher" select-value-type="string" ng-options="it.user_id as it.user_id | lookup_teacher for it in getTeacher()">
+                    <option value="">ทั้งหมด</option>
+                </select>
+                <div class="input-group-addon btn btn-default" ng-click="setFilter()"><span class="glyphicon glyphicon-filter"></span></div>
+            </div>
+            <div class="input-group col-md-6 col-md-offset-3">
+                <div class="input-group-addon  adon-label">ระดับชั้น</div>
+                <select class="form-control" ng-change="setFilter()" ng-model="options.level" select-value-type="string" ng-options="it.level_id as it.name for it in getLevel()">
+                    <option value="">ทั้งหมด</option>
+                </select>
+                <div class="input-group-addon btn btn-default" ng-click="setFilter()"><span class="glyphicon glyphicon-filter"></span></div>
+            </div>
+            <div class="input-group col-md-6 col-md-offset-3">
+                <div class="input-group-addon adon-label">ชนิดของสื่อ</div>
+                <select class="form-control" ng-change="setFilter()" select-default ng-model="options.type" select-value-type="string" ng-options="it.type_id as it.name for it in Lookups.getType() ">
+                    <option value="">ทั้งหมด</option>
+                </select>
+                <div class="input-group-addon btn btn-default" ng-click="setFilter()"><span class="glyphicon glyphicon-filter"></span></div>
+            </div>
+
+            <hr />
+        </div>
+        <hr style="border-color:#c0d0c0" ng-show="filterIsShow()" />
+    </div>
+
+<!-- search result -->
+
+    <ul class="nav nav-pills" ng-init="currentTab=1">
+        <li class="big" role="presentation text-info" ng-class="{'active':currentTab==1}"><a href="javascript:void(0)" ng-click="currentTab=1"><span class="glyphicon glyphicon-equalizer"></span> ข้อมูลสถิติ</a></li>
+        <li class="big" role="presentation text-info" ng-class="{'active':currentTab==2}"><a href="javascript:void(0)" ng-click="currentTab=2"><span class="fa fa-users"></span> การใช้สื่อของครูกับนักเรียน</a></li>
+   
+    </ul>
+
+<div  ng-controller="CustomTableCtrl as ctable" ng-init="loadLookups();gsearch=Search.getOptions();setAPI('report_media2','',{date_from:'gsearch.date_from',date_to:'gsearch.date_to',level_id:'gsearch.level', group_id:'gsearch.group', type_id:'gsearch.type',user_id:'gsearch.teacher',subject_id:'gsearch.subject'})">
+
+<div class="row" ng-if="currentTab==1">
+
+    <div class="col-md-12" >
+    <ul class="list-group" style="margin-top:3em">
+	    <li class="list-group-item" style="background-color:#efefef">
+		    <h3 class="list-group-item-heading"><span class="fa fa-bar-chart"></span> ข้อมูลสถิติ</h3>
+	    </li>
+	    <li class="list-group-item text-center" >
+		    <div class="row" style="padding-top:3em">
+			    <div class="col-md-6">
+				    <highchart  config="TableMeta.chart_medias"  ></highchart>
+			    </div>			
+			    <div class="col-md-6">
+				    <highchart  config="TableMeta.chart_evaluates"  ></highchart>
+			    </div>
+			    <div class="col-md-6" style="padding-top:3em">
+				    <highchart  config="TableMeta.chart_views"  ></highchart>
+			    </div>
+			    <div class="col-md-6" style="padding-top:3em">
+				    <highchart  config="TableMeta.chart_types"></highchart>
+			    </div>			
+		    </div>	
+
+	    </li>		
+    </ul>
+    </div>
+</div>
+
+<div class="row" ng-if="currentTab==2">
+
+    <div class="col-md-12">
+        <ul class="list-group" style="margin-top:3em">
+            <li class="list-group-item" style="background-color:#efefef">
+                <h3 class="list-group-item-heading"><span class="fa fa-bar-chart"></span> การใช้สื่อของครูกับนักเรียน</h3>
+            </li>
+            <li class="list-group-item text-center">
+                <div class="row" style="padding-top:3em">
+                    <div class="col-md-6">
+                        <highchart config="TableMeta.chart_uses"></highchart>
+                    </div>
+                    <div class="col-md-6">
+                        <highchart config="TableMeta.chart_uses2"></highchart>
+                    </div>
+                </div>
+
+            </li>
+
+        </ul>
+    </div>
+</div>
+
+
+
+<div style="margin-top:3em" ng-show="currentTab==3" class="list-group">
+    <div class="list-group-item" style="background-color:#efefef" ng-init="setTable(ctable)">
+			<h4 class="pull-right"> 
+				<span class="fa fa-film pdr2"> สื่อทั้งหมด  <span class="badge">{{tableParams.total()}}</span></span>
+			</h4>    
+            <div class="text-left"> 
+                <h2 style="padding:0px;margin:0px;"><span  class="glyphicon glyphicon-th"></span> 
+                		รายการสื่อ 
+                </h2>
+            </div>
+
+    </div>
+
+    <div class="list-group-item" style="padding-bottom:0px;">
+        <div loading-container="tableParams.settings().$loading">
+			
+            <table ng-table="tableParams" show-filter="false" class="table table-hover table-responsive" template-pagination="custom.pages.html">
+                <tbody>
+                    <tr ng-repeat="it in $data"
+                        ng-click="selectRow(it);"
+                        ng-class="{'active': isSelected(it)}">
+
+                        <td width="30" class="text-right text-muted">{{startIdx + $index + 1}}.</td>
+                        	<td data-title="'รหัส'" sortable="'code'">
+                        	<span ng-if="getRoleName()=='manager'"><span ng-if="it._score!==undefined" class="fa fa-lg fa-check-circle-o" title="คะแนนที่ให้ {{it._score|number:1}}"></span><span ng-if="it._score===undefined" class="fa fa-lg fa-circle-thin" ></span></span>
+                        	<img title="{{it.media_id}}" onerror="this.src='images/thumb.png'" ng-src="uploads/{{it.user_id}}/sm/{{it.thumb}}?v={{it.date_modified | date_version}}" height="24"/>
+
+                        </td>
+                        <td data-title="'ชื่อเรื่อง'" sortable="'topic'">
+                            <span class="fa {{it.type_id|lookup_type:'icon'}}" ng-class="{'active':isTrue(it.active),'inactive':!isTrue(it.active)}"></span> {{it.topic}}                           
+                        </td>
+                    
+                        <td data-title="'ผู้สอน'" sortable="'user_id'" >
+                            {{it.user_id | lookup_teacher}} 
+                        </td>
+                        <td data-title="'กลุ่มสาระ'" sortable="'group_id'" >
+                            {{it.group_id | lookup_group}}
+                        </td>
+                        <td data-title="'วิชา'" sortable="'subject_id'" >
+                            {{it.subject_id | lookup_subject}}
+                        </td>                        
+                        <td data-title="'เข้าดู(ครั้ง)'" class="text-center">
+                           {{it.count_views|number:0}}
+                            
+                        </td>
+                        <td data-title="'คะแนนประเมิน'" sortable="'evaluate_score'">
+                            {{(it.evaluate_count>0)?((it.evaluate_score ||0)|number:1):'-'}}
+                        </td>                            
+                        <td data-title="''" width="25">
+                        <button  ng-if="isSelected(it)" ng-click="$root.viewMedia(it);" class="btn text-primary btn pull-right"><span class="fa fa-th-list"> <span ng-if="getRoleName()=='manager'">ตรวจสอบสื่อ</span>  <span ng-if="getRoleName()!='manager'">เรียนรู้สื่อ </span><span class="fa fa-arrow-right"></span></button>
+                        </td>  
+                    </tr>
+                </tbody>
+            </table>
+			
+        </div>
+    </div>
+    </div>
+</div>
+
+</form>

@@ -1,0 +1,81 @@
+﻿<br>
+<br>
+<div class="container-fluid">
+
+    <div class="list-group" ng-controller="CustomTableCtrl" ng-init="pkField='media_id';setAPI('history_evaluate','',{})">
+        <div class="list-group-item" style="background-color:#efefef">
+            
+				<h4 class="pull-right"> 
+					<span class="fa fa-film pdr2"> สื่อทั้งหมด  <span class="badge">{{tableParams.total()}}</span></span> &nbsp; 
+<span class="fa-stack">
+  <i class="fa fa-film fa-stack-1x"></i>
+  <i class="fa fa-check fa-stack-1x" style="color:green"></i>
+</span>
+					
+					 ให้ผ่าน  <span class="badge">{{TableMeta.pass||0}}</span> &nbsp; 
+					<span class="fa-stack">
+  <i class="fa fa-film fa-stack-1x"></i>
+  <i class="fa fa-times fa-stack-1x" style="color:red"></i>
+</span> ให้ไม่ผ่าน  <span class="badge">{{TableMeta.nopass||0}}</span>
+				</h4>            
+                <h2 style="padding:0px;margin:0px;"><span class="fa fa-calendar"></span> ประวัติการประเมินสื่อ</h2>
+
+        </div>
+        <style>
+            .adon-label {
+                width: 150px;
+                text-align: 'right';
+            }
+            tr.disabled td {color:#aaaaaa;}
+        </style>
+        <div class="list-group-item" style="padding-bottom:0px;">
+            <div loading-container="tableParams.settings().$loading">
+
+    
+                <table ng-table="tableParams" show-filter="false" class="table table-hover" template-pagination="custom.pages.html">
+                    <tbody>
+
+                        <tr ng-repeat="it in $data"
+                            ng-click="selectRow(it);"
+ 
+                            ng-class="{'active': it.avg_score>=3,'disabled': (!(it.avg_score>=3))}">
+                            <td width="30" class="text-right text-muted">{{startIdx + $index + 1}}.</td>
+                            <td data-title="'รหัส'" >
+                        	<img onerror="this.src='images/thumb.png'" ng-src="uploads/{{it.user_id}}/sm/{{it.thumb}}?v={{it.date_modified | date_version}}" height="24" width="32"/>
+                        	<span>{{it.media_id}}</span>
+                            </td>
+                            <td data-title="'ชื่อเรื่อง'" >
+                                <span class="fa {{it.type_id|lookup_type:'icon'}}" ng-class="{'active':isTrue(it.active),'inactive':!isTrue(it.active)}"></span> {{it.topic}} 
+                            </td>   
+                            <td data-title="'ผู้สอน'" >
+                                {{it.user_id|lookup_teacher}}
+                            </td>   
+                            <td data-title="'กลุ่มสาระ'" >
+                                {{it.group_id|lookup_group}}
+                            </td>  
+                            <td data-title="'วิชา'" >
+                                {{it.subject_id|lookup_subject}}
+                            </td>  
+                            <td data-title="'วันที่ประเมิน'">
+                                {{it.date_modified |thai_date:'full'}}
+                            </td>
+                            <td data-title="'คะแนน'">
+                                {{it.avg_score|number:1}}
+                            </td>                                
+                        </td>
+                        <td data-title="''" width="25">
+                        <button  ng-if="isSelected(it)" ng-click="$root.viewMedia(it);" class="btn text-primary btn pull-right"> เรียนรู้สื่อ  <span class="fa fa-arrow-right"></span></button>
+                        </td>                                                                                                                  
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+

@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<style>
+body{margin-top:20px;background:#5a5a5a}
+.ui-group-buttons .or{position:relative;float:left;width:.3em;height:1.3em;z-index:3;font-size:12px}
+.ui-group-buttons .or:before{position:absolute;top:50%;left:50%;content:'or';background-color:#5a5a5a;margin-top:-.1em;margin-left:-.9em;width:1.8em;height:1.8em;line-height:1.55;color:#fff;font-style:normal;font-weight:400;text-align:center;border-radius:500px;-webkit-box-shadow:0 0 0 1px rgba(0,0,0,0.1);box-shadow:0 0 0 1px rgba(0,0,0,0.1);-webkit-box-sizing:border-box;-moz-box-sizing:border-box;-ms-box-sizing:border-box;box-sizing:border-box}
+.ui-group-buttons .or:after{position:absolute;top:0;left:0;content:' ';width:.3em;height:2.84em;background-color:rgba(0,0,0,0);border-top:.6em solid #5a5a5a;border-bottom:.6em solid #5a5a5a}
+.ui-group-buttons .or.or-lg{height:1.3em;font-size:16px}
+.ui-group-buttons .or.or-lg:after{height:2.85em}
+.ui-group-buttons .or.or-sm{height:1em}
+.ui-group-buttons .or.or-sm:after{height:2.5em}
+.ui-group-buttons .or.or-xs{height:.25em}
+.ui-group-buttons .or.or-xs:after{height:1.84em;z-index:-1000}
+.ui-group-buttons{display:inline-block;vertical-align:middle}
+.ui-group-buttons:after{content:".";display:block;height:0;clear:both;visibility:hidden}
+.ui-group-buttons .btn{float:left;border-radius:0}
+.ui-group-buttons .btn:first-child{margin-left:0;border-top-left-radius:.25em;border-bottom-left-radius:.25em;padding-right:15px}
+.ui-group-buttons .btn:last-child{border-top-right-radius:.25em;border-bottom-right-radius:.25em;padding-left:15px}
+
+
+.login-or {
+    position: relative;
+    font-size: 18px;
+    color: #aaa;
+    margin-top: 10px;
+            margin-bottom: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  .span-or {
+    display: block;
+    position: absolute;
+    left: 50%;
+    top: -2px;
+    margin-left: -25px;
+    background-color: #fff;
+    width: 50px;
+    text-align: center;
+  }
+  .hr-or {
+    background-color: #cdcdcd;
+    height: 1px;
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
+  }
+  
+  
+  
+  body{margin:40px;}
+
+
+.btn-circle {
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  padding: 6px 0;
+  font-size: 12px;
+  line-height: 1.428571429;
+  border-radius: 15px;
+}
+.btn-circle.btn-lg {
+  width: 50px;
+  height: 50px;
+  padding: 10px 16px;
+  font-size: 18px;
+  line-height: 1.33;
+  border-radius: 25px;
+}
+.btn-circle.btn-xl {
+  width: 70px;
+  height: 70px;
+  padding: 10px 16px;
+  font-size: 24px;
+  line-height: 1.33;
+  border-radius: 35px;
+}
+  
+
+/* Breadcrumbs from http://bootsnipp.com/snippets/featured/triangle-breadcrumbs-arrows */
+.btn-breadcrumb .btn:not(:last-child):after {
+  content: " ";
+  display: block;
+  width: 0;
+  height: 0;
+  border-top: 17px solid transparent;
+  border-bottom: 17px solid transparent;
+  border-left: 10px solid white;
+  position: absolute;
+  top: 50%;
+  margin-top: -17px;
+  left: 100%;
+  z-index: 3;
+}
+.btn-breadcrumb .btn:not(:last-child):before {
+  content: " ";
+  display: block;
+  width: 0;
+  height: 0;
+  border-top: 17px solid transparent;
+  border-bottom: 17px solid transparent;
+  border-left: 10px solid rgb(173, 173, 173);
+  position: absolute;
+  top: 50%;
+  margin-top: -17px;
+  margin-left: 1px;
+  left: 100%;
+  z-index: 3;
+}
+
+.btn-breadcrumb .btn {
+  padding:6px 12px 6px 24px;
+}
+.btn-breadcrumb .btn:first-child {
+  padding:6px 6px 6px 10px;
+}
+.btn-breadcrumb .btn:last-child {
+  padding:6px 18px 6px 24px;
+}
+
+/** Default button **/
+.btn-breadcrumb .btn.btn-default:not(:last-child):after {
+  border-left: 10px solid #fff;
+}
+.btn-breadcrumb .btn.btn-default:not(:last-child):before {
+  border-left: 10px solid #ccc;
+}
+.btn-breadcrumb .btn.btn-default:hover:not(:last-child):after {
+  border-left: 10px solid #ebebeb;
+}
+.btn-breadcrumb .btn.btn-default:hover:not(:last-child):before {
+  border-left: 10px solid #adadad;
+}
+
+/* The responsive part */
+
+.btn-breadcrumb > * > div {
+    /* With less: .text-overflow(); */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;    
+}
+
+.btn-breadcrumb > *:nth-child(n+2) {
+  display:none;
+}
+
+/* === For phones =================================== */
+@media (max-width: 767px) {
+    .btn-breadcrumb > *:nth-last-child(-n+2) {
+        display:block;
+    } 
+    .btn-breadcrumb > * div {
+        max-width: 60px;
+    }
+}
+
+/* === For tablets ================================== */
+@media (min-width: 768px) and (max-width:991px) {
+    .btn-breadcrumb > *:nth-last-child(-n+4) {
+        display:block;
+    } 
+    .btn-breadcrumb > * div {
+        max-width: 100px;
+    }
+}
+
+/* === For desktops ================================== */
+@media (min-width: 992px) {
+    .btn-breadcrumb > *:nth-last-child(-n+6) {
+        display:block;
+    } 
+    .btn-breadcrumb > * div {
+        max-width: 170px;
+    }
+}
+
+
+</style>
+<script>
+
+$(document).ready(function(){
+    $(window).resize(function() {
+
+        ellipses1 = $("#bc1 :nth-child(2)")
+        if ($("#bc1 a:hidden").length >0) {ellipses1.show()} else {ellipses1.hide()}
+        
+        ellipses2 = $("#bc2 :nth-child(2)")
+        if ($("#bc2 a:hidden").length >0) {ellipses2.show()} else {ellipses2.hide()}
+        
+    })
+    
+});
+</script>
+<body>
+
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+
+<div class="container">
+    <div class="row">
+		<h2>Breadcrumbs 1 (6 elements)</h2>
+        <div id="bc1" class="btn-group btn-breadcrumb">
+            <a href="#" class="btn btn-default"><i class="fa fa-home"></i></a>
+            <div class="btn btn-default">...</div>
+            <a href="#" class="btn btn-default"><div>label 1</div></a>
+            <a href="#" class="btn btn-default"><div>label 2. A very very long one to truncate</div></a>
+            <a href="#" class="btn btn-default"><div>label 3</div></a>
+            <a href="#" class="btn btn-default"><div>label 4</div></a>
+            <a href="#" class="btn btn-default"><div>label 5</div></a>
+            <a href="#" class="btn btn-default"><div>label 6. A very very long one to truncate</div></a>
+        </div>
+	</div>
+    
+    <div class="row">
+    	<h2>Breadcrumbs 2 (8 elements)</h2>
+        <div id="bc2" class="btn-group btn-breadcrumb">
+            <a href="#" class="btn btn-default"><i class="fa fa-home"></i></a>
+            <div class="btn btn-default">...</div>
+            <a href="#" class="btn btn-default"><div>label 1. A very very long one to truncate</div></a>
+            <a href="#" class="btn btn-default"><div>label 2</div></a>
+            <a href="#" class="btn btn-default"><div>label 3</div></a>
+            <a href="#" class="btn btn-default"><div>label 4</div></a>
+            <a href="#" class="btn btn-default"><div>label 5. A very very long one to truncate</div></a>
+            <a href="#" class="btn btn-default"><div>label 6</div></a>
+            <a href="#" class="btn btn-default"><div>label 7</div></a>
+            <a href="#" class="btn btn-default"><div>label 8</div></a>
+        </div>
+	</div>
+
+    <div class="row" style="margin-top:30px; color:green; font-weight:bold">
+        <div class="visible-xs">Phone (2 elements, max-size:60px)</div>
+        <div class="visible-sm">Tablet (4 elements, max-size:100px)</div>
+        <div class="hidden-xs hidden-sm">Desktop (6 elements, max-size:160px)</div>
+    </div>
+
+    <div class="row" style="margin-top:30px">
+        Responsive breadcrumbs that:
+        <ul>
+            <li>display only the last n elements. Ellipses are added at the beginning of the list if elements are hidden.</li>
+            <li>set a maximum size for each elements. Ellipses are added after the label if it's too long.</li>
+        </ul>
+        <p>By setting breakpoints you can set the number of elements to display and their maximum size for different screen sizes.</p>
+        <p>Adapted from <a href="http://bootsnipp.com/snippets/featured/triangle-breadcrumbs-arrows">Triangle Breadcrumbs Arrows</a></p>
+    </div>
+
+
+
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ui-group-buttons">
+                <a href="http://www.jquery2dotnet.com" class="btn btn-success" role="button"><span class="glyphicon glyphicon-thumbs-up"></span></a>
+                <div class="or"></div>
+                <a href="http://www.jquery2dotnet.com" class="btn btn-danger" role="button"><span class="glyphicon glyphicon-thumbs-down"></span></a>
+            </div>
+            <div class="ui-group-buttons">
+                <a href="http://www.jquery2dotnet.com" class="btn btn-success" role="button"><span class="glyphicon glyphicon-floppy-disk"></span></a>
+                <div class="or"></div>
+                <a href="http://www.jquery2dotnet.com" class="btn btn-danger" role="button"><span class="glyphicon glyphicon-trash"></span></a>
+            </div>
+            <br />
+            <br />
+            <div class="ui-group-buttons">
+                <a href="http://www.jquery2dotnet.com" class="btn btn-success" role="button"><span class="glyphicon glyphicon-ok"></span> Sign Up</a>
+                <div class="or"></div>
+                <a href="http://www.jquery2dotnet.com" class="btn btn-default" role="button"><span class="glyphicon glyphicon-remove"></span> Reset</a>
+            </div>
+            <br />
+            <br />
+            <div class="ui-group-buttons">
+                <button type="button" class="btn btn-primary btn-lg">Large button</button>
+                <div class="or or-lg"></div>
+                <button type="button" class="btn btn-success btn-lg">Large button</button>
+            </div>
+            <br />
+            <br />
+            <div class="ui-group-buttons">
+                <button type="button" class="btn btn-primary">Default</button>
+                <div class="or"></div>
+                <button type="button" class="button btn btn-success">Success</button>
+            </div>
+            <br />
+            <br />
+            <div class="ui-group-buttons">
+                <button type="button" class="btn btn-primary btn-sm">Small button</button>
+                <div class="or or-sm"></div>
+                <button type="button" class="btn btn-success btn-sm">Small button</button>
+            </div>
+            <br />
+            <br />
+            <div class="ui-group-buttons">
+                <button type="button" class="btn btn-primary btn-xs">Extra small button</button>
+                <div class="or or-xs"></div>
+                <button type="button" class="btn btn-success btn-xs">Extra small button</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+      <div class="login-or">
+        <hr class="hr-or">
+        <span class="span-or">or</span>
+      </div>
+      
+      <button type="button" class="btn btn-default btn-circle"><i class="glyphicon glyphicon-ok"></i></button>
+<button type="button" class="btn btn-primary btn-circle"><i class="glyphicon glyphicon-list"></i></button>
+<button type="button" class="btn btn-success btn-circle"><i class="glyphicon glyphicon-link"></i></button>
+<button type="button" class="btn btn-info btn-circle"><i class="glyphicon glyphicon-ok"></i></button>
+<button type="button" class="btn btn-warning btn-circle"><i class="glyphicon glyphicon-remove"></i></button>
+<button type="button" class="btn btn-danger btn-circle"><i class="glyphicon glyphicon-heart"></i></button>
+
+<h2>lg</h2>
+<button type="button" class="btn btn-default btn-circle btn-lg"><i class="glyphicon glyphicon-ok"></i></button>
+<button type="button" class="btn btn-primary btn-circle btn-lg"><i class="glyphicon glyphicon-list"></i></button>
+<button type="button" class="btn btn-success btn-circle btn-lg"><i class="glyphicon glyphicon-link"></i></button>
+<button type="button" class="btn btn-info btn-circle btn-lg"><i class="glyphicon glyphicon-ok"></i></button>
+<button type="button" class="btn btn-warning btn-circle btn-lg"><i class="glyphicon glyphicon-remove"></i></button>
+<button type="button" class="btn btn-danger btn-circle btn-lg"><i class="glyphicon glyphicon-heart"></i></button>
+
+<h2>xl</h2>
+<button type="button" class="btn btn-default btn-circle btn-xl"><i class="glyphicon glyphicon-ok"></i></button>
+<button type="button" class="btn btn-primary btn-circle btn-xl"><i class="glyphicon glyphicon-list"></i></button>
+<button type="button" class="btn btn-success btn-circle btn-xl"><i class="glyphicon glyphicon-link"></i></button>
+<button type="button" class="btn btn-info btn-circle btn-xl"><i class="glyphicon glyphicon-ok"></i></button>
+<button type="button" class="btn btn-warning btn-circle btn-xl"><i class="glyphicon glyphicon-remove"></i></button>
+<button type="button" class="btn btn-danger btn-circle btn-xl"><i class="glyphicon glyphicon-heart"></i></button>
+      
+</div>
+</body>
+</html>
